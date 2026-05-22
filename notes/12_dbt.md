@@ -4,15 +4,17 @@
 
 ## Why dbt Changed Data Engineering
 
-Before dbt, the transformation layer in a data warehouse was a graveyard of stored procedures, undocumented SQL scripts, and ad-hoc queries. Changes were made directly in the warehouse UI, nobody knew what depended on what, and there were no tests to catch regressions. dbt brought software engineering practices — version control, testing, documentation, code review — to SQL transformations. For senior DE interviews, dbt fluency is now essentially table stakes.
+Before dbt, the transformation layer in a data warehouse was a graveyard of stored procedures, undocumented SQL scripts, and ad-hoc queries. Changes were made directly in the warehouse UI, nobody knew where the truth was, and rolling back a transformation meant hoping you remembered what you did yesterday.
 
-> **🌍 Real world:** dbt's rise mirrors the shift from ETL to ELT. When compute was expensive, you transformed before loading (ETL). Now that warehouse compute is cheap (Snowflake, BigQuery, Redshift), you load raw data first and transform in-warehouse (ELT). dbt is the tool that made the T in ELT manageable at scale.
+dbt changed this by treating SQL transformations like software: version-controlled, tested, documented, and deployed through CI/CD.
+
+> **🌍 Real world:** dbt's rise mirrors the shift from ETL to ELT. When compute was expensive, you transformed before loading (ETL). Now that warehouse compute is cheap (Snowflake, BigQuery, Redshift), the bottleneck is I/O and data quality, not transformation speed. So the pattern flipped: extract raw data directly into the warehouse, then transform in place (ELT). dbt became the standard tool for the T in ELT.
 
 ---
 
 ## 1. What Is dbt
 
-The most important thing to understand is what dbt does NOT do. It does not extract data from source systems. It does not load data into the warehouse. It only transforms data that is already in the warehouse. This clean separation of concerns is what makes dbt powerful — it focuses on doing one thing excellently.
+The most important thing to understand is what dbt does NOT do. It does not extract data from source systems. It does not load data into the warehouse. It only transforms data that is already in the warehouse.
 
 ```
 dbt = transformation layer only (the T in ELT)
@@ -30,13 +32,13 @@ The modern ELT stack:
 Fivetran/Airbyte → warehouse (raw data) → dbt → analytics/dashboards
 ```
 
-> **💡 Interview tip:** "What does dbt do?" A common trap is saying dbt is an ETL tool. It is NOT. It's purely the T in ELT. You still need a separate tool (Fivetran, Airbyte, Kafka, custom scripts) to extract and load raw data into the warehouse. dbt picks up from there, transforming that raw data into analytics-ready models.
+> **💡 Interview tip:** "What does dbt do?" A common trap is saying dbt is an ETL tool. It is NOT. It's purely the T in ELT. You still need a separate tool (Fivetran, Airbyte, Kafka, custom script) to get data into the warehouse. dbt only transforms what's already there.
 
 ---
 
 ## 2. Project Structure
 
-dbt's folder structure is opinionated by convention, and the convention reflects a layered data modeling philosophy. Staging models clean raw source data (rename columns, cast types, filter deleted rows). Intermediate models handle complex business logic joins. Mart models are the final, business-ready tables that analysts query. This layering means any transformation is touched in exactly one place.
+dbt's folder structure is opinionated by convention, and the convention reflects a layered data modeling philosophy. Staging models clean raw source data (rename columns, cast types, filter deletes). Intermediate models combine staging with business logic. Marts are business-ready tables and views.
 
 ```
 my_dbt_project/
@@ -65,7 +67,7 @@ my_dbt_project/
 └── analyses/                ← ad-hoc SQL (not materialized)
 ```
 
-> **🌍 Real world:** The staging → intermediate → marts layer structure is the Kimball-influenced pattern that most dbt shops converge on. Staging models are 1:1 with source tables (one staging model per source table). Marts are organized by business domain (finance, marketing, product). Intermediate models handle anything too complex for staging but not final enough for marts.
+> **🌍 Real world:** The staging → intermediate → marts layer structure is the Kimball-influenced pattern that most dbt shops converge on. Staging models are 1:1 with source tables (one staging model per source table). This makes it easy to reason about data quality at the entry point. Intermediate models combine multiple staging models with joins and filtering. Marts are the final, optimized tables that dashboards and analysts use.
 
 ---
 
@@ -73,7 +75,7 @@ my_dbt_project/
 
 ### Basic Model
 
-dbt's core abstraction is beautiful in its simplicity: you write a SELECT statement, dbt figures out whether to wrap it in `CREATE VIEW AS` or `CREATE TABLE AS` or `MERGE INTO`. You focus on the transformation logic; dbt handles the DDL.
+dbt's core abstraction is beautiful in its simplicity: you write a SELECT statement, dbt figures out whether to wrap it in `CREATE VIEW AS` or `CREATE TABLE AS` or `MERGE INTO`. You focus on the transformation logic, not the DDL.
 
 ```sql
 -- models/staging/stg_orders.sql
@@ -92,7 +94,7 @@ WHERE _fivetran_deleted = FALSE
 
 ### Referencing Other Models
 
-`ref()` is the magic that makes dbt more than just a SQL runner. When you write `{{ ref('stg_orders') }}`, dbt knows this model depends on `stg_orders` and will build `stg_orders` first, every time, automatically. It also substitutes the correct schema-qualified table name for the target environment — no hardcoding schema names.
+`ref()` is the magic that makes dbt more than just a SQL runner. When you write `{{ ref('stg_orders') }}`, dbt knows this model depends on `stg_orders` and will build `stg_orders` first, every time, automatically.
 
 ```sql
 -- models/marts/fct_orders.sql
@@ -118,7 +120,7 @@ ref('model_name')         — reference a dbt model you've built
 source('source', 'table') — reference raw source table in warehouse
 ```
 
-> **💡 Interview tip:** "How does dbt determine the order in which to build models?" dbt parses all `ref()` calls in all models to build a Directed Acyclic Graph (DAG) of dependencies. It then performs a topological sort and builds models in dependency order. This means you never need to specify build order — just use `ref()` and dbt figures it out. If you have a circular dependency (`model_a` refs `model_b` which refs `model_a`), dbt will fail with an error because a DAG cannot have cycles.
+> **💡 Interview tip:** "How does dbt determine the order in which to build models?" dbt parses all `ref()` calls in all models to build a Directed Acyclic Graph (DAG) of dependencies. It then topologically sorts the DAG and builds models in dependency order. This is why circular dependencies are not allowed.
 
 ---
 
@@ -143,15 +145,19 @@ SELECT ...
 SELECT ...
 
 -- Incremental: only process new/changed records
+{% raw %}
 {{ config(
     materialized='incremental',
-    unique_key='order_id',           -- merge on this key
+    unique_key='order_id',
     on_schema_change='append_new_columns'
 ) }}
+{% endraw %}
 SELECT ...
+{% raw %}
 {% if is_incremental() %}
     WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
 {% endif %}
+{% endraw %}
 
 -- Ephemeral: not materialized — injected as CTE into downstream models
 {{ config(materialized='ephemeral') }}
@@ -160,7 +166,7 @@ SELECT ...
 
 ### dbt_project.yml — Global Materialisation Config
 
-Set materialization defaults at the folder level so individual models don't need config blocks. Staging = views (cheap, always fresh from source). Intermediate = ephemeral (no storage needed, just reusable SQL). Marts = tables (fast for analysts to query).
+Set materialization defaults at the folder level so individual models don't need config blocks. Staging = views (cheap, always fresh from source). Intermediate = ephemeral (no storage needed, just CTEs). Marts = tables (expensive to build, cheap to query).
 
 ```yaml
 name: my_project
@@ -184,7 +190,7 @@ models:
 
 ## 5. Sources
 
-Sources are how dbt knows about raw data that wasn't built by dbt itself. Declaring sources in YAML does two things: (1) it gives you `source()` function references with proper schema resolution, and (2) it enables `dbt source freshness` to check when the raw data was last updated. If Fivetran hasn't synced in 24 hours, `dbt source freshness` will warn or error before you waste time running transformations on stale data.
+Sources are how dbt knows about raw data that wasn't built by dbt itself. Declaring sources in YAML does two things: (1) it gives you `source()` function references with proper schema resolution, (2) it lets dbt monitor source freshness (how recently raw data was updated).
 
 ```yaml
 # models/staging/_staging__sources.yml
@@ -221,11 +227,11 @@ dbt source freshness
 
 ## 6. Tests
 
-dbt tests are the mechanism that lets you catch data regressions before they reach production. The workflow is: tests run in CI on every PR. A failing test blocks the PR merge. No bad data reaches the production dbt run. This is the data engineering equivalent of unit tests blocking a broken code merge.
+dbt tests are the mechanism that lets you catch data regressions before they reach production. The workflow is: tests run in CI on every PR. A failing test blocks the PR merge. No bad data reaches production dashboards. Ever.
 
 ### Schema Tests (YAML)
 
-The four built-in tests cover the most common assertions. The `relationships` test is particularly powerful — it's a foreign key check that ensures referential integrity between your dbt models.
+The four built-in tests cover the most common assertions. The `relationships` test is particularly powerful — it's a foreign key check that ensures referential integrity between your dbt models (unlike traditional database FKs, dbt doesn't enforce them in the warehouse, it just tests them).
 
 ```yaml
 # models/marts/_orders__models.yml
@@ -267,7 +273,7 @@ models:
 
 ### Custom Data Tests (SQL)
 
-Custom SQL tests let you encode any business rule that doesn't fit the four built-in tests. The contract is simple: write a query that returns rows when the rule is VIOLATED. dbt runs the query and fails the test if any rows are returned.
+Custom SQL tests let you encode any business rule that doesn't fit the four built-in tests. The contract is simple: write a query that returns rows when the rule is VIOLATED. dbt runs the query and fails the test if any rows are returned (meaning the rule was violated).
 
 ```sql
 -- tests/assert_positive_order_amounts.sql
@@ -284,13 +290,13 @@ dbt test --select fct_orders       # test specific model
 dbt test --select tag:daily        # test models with tag
 ```
 
-> **💡 Interview tip:** "How do you prevent data quality regressions in dbt?" Full answer: (1) dbt schema tests (not_null, unique, accepted_values, relationships) catch structural problems, (2) custom SQL tests catch business-rule violations, (3) tests run in CI on every PR so regressions are caught before merge, (4) `dbt source freshness` catches stale upstream data before wasting compute on a full run, (5) `dbt_expectations` package provides 200+ additional test types similar to Great Expectations.
+> **💡 Interview tip:** "How do you prevent data quality regressions in dbt?" Full answer: (1) dbt schema tests (not_null, unique, accepted_values, relationships) catch structural problems, (2) custom SQL tests catch business rule violations, (3) tests run in CI/CD on every PR before merge, (4) Great Expectations or Soda can be run post-dbt for advanced profiling.
 
 ---
 
 ## 7. Incremental Models — Deep Dive
 
-Incremental models are the most important materialization to deeply understand. The premise: if your `fct_events` table has 10 billion rows and you add 5 million new rows per day, rebuilding the entire table daily is extremely expensive. Incremental models solve this by only processing new or changed rows and merging them into the existing table.
+Incremental models are the most important materialization to deeply understand. The premise: if your `fct_events` table has 10 billion rows and you add 5 million new rows per day, rebuilding the entire table from scratch every day is wasteful. Instead, process only the new/changed rows and merge them into the existing table.
 
 The key concepts to understand:
 - `unique_key` — the column dbt uses to identify whether a row is new (insert) or existing (update)
@@ -299,16 +305,17 @@ The key concepts to understand:
 
 ```sql
 -- models/marts/fct_events.sql
+{% raw %}
 {{ config(
     materialized='incremental',
     unique_key='event_id',
-    incremental_strategy='merge',    -- merge | append | delete+insert
+    incremental_strategy='merge',
     on_schema_change='append_new_columns',
     partition_by={
         "field": "event_date",
         "data_type": "date",
         "granularity": "day"
-    }  -- BigQuery / Snowflake
+    }
 ) }}
 
 SELECT
@@ -321,12 +328,12 @@ SELECT
 FROM {{ source('raw', 'events') }}
 
 {% if is_incremental() %}
-    -- Only process new events since last run
     WHERE event_ts > (
         SELECT COALESCE(MAX(event_ts), '1900-01-01'::TIMESTAMP)
         FROM {{ this }}
     )
 {% endif %}
+{% endraw %}
 ```
 
 **Incremental strategies:**
@@ -336,17 +343,17 @@ merge:          UPSERT on unique_key (handles updates)
 delete+insert:  delete matching rows, re-insert (partition refresh)
 ```
 
-> **💡 Interview tip:** This is one of the most common dbt deep-dive interview questions. Key points: (1) `is_incremental()` is `False` on the first run (when the table doesn't exist yet) and on `--full-refresh`, so the WHERE filter is omitted and all data is loaded — this is intentional and correct; (2) the `merge` strategy requires a `unique_key` so dbt knows whether to insert or update; (3) use `--full-refresh` periodically (weekly, monthly) to reprocess the full history and correct any late-arriving data that the incremental filter would have missed.
+> **💡 Interview tip:** This is one of the most common dbt deep-dive interview questions. Key points: (1) `is_incremental()` is `False` on the first run (when the table doesn't exist yet) and on `dbt run --full-refresh` (force rebuild), (2) the high-water mark pattern filters to new data, (3) `unique_key` tells dbt which rows are duplicates to deduplicate/update, (4) `on_schema_change` handles when new columns are added to the source.
 
-> **🌍 Real world:** A subtle incremental model gotcha: if your source data can arrive *late* (events from yesterday appearing today), your high-water mark approach (`WHERE event_ts > MAX(event_ts)`) will miss them. Solutions: use a lookback window (`WHERE event_ts > MAX(event_ts) - INTERVAL '3 days'`) to reprocess recent days, or use `delete+insert` strategy on date partitions to fully refresh recent partitions.
+> **🌍 Real world:** A subtle incremental model gotcha: if your source data can arrive *late* (events from yesterday appearing today), your high-water mark approach (`WHERE event_ts > MAX(event_ts)`) will miss those rows. Use `dbt run --full-refresh` on a schedule (weekly), or use a check-based strategy that compares hashes of all columns.
 
 ---
 
 ## 8. Snapshots — SCD Type 2
 
-SCD Type 2 (Slowly Changing Dimensions) is the pattern of tracking historical changes to dimension records: when a customer changes their email address, you want to keep both the old and new email with validity timestamps so you can correctly attribute historical orders to the right email address.
+SCD Type 2 (Slowly Changing Dimensions) is the pattern of tracking historical changes to dimension records: when a customer changes their email address, you want to keep both the old and new email, with timestamps indicating when each was valid.
 
-Before dbt, implementing SCD Type 2 required custom code: detect changes, close the old record (`valid_to = NOW()`), insert a new record. dbt snapshots do this automatically. You write a SELECT statement returning the current state; dbt handles detecting changes and maintaining the history table.
+Before dbt, implementing SCD Type 2 required custom code: detect changes, close the old record (`valid_to = NOW()`), insert a new record. dbt snapshots do this automatically. You write a SELECT statement, dbt handles the rest.
 
 ```sql
 -- snapshots/customers_snapshot.sql
@@ -355,9 +362,8 @@ Before dbt, implementing SCD Type 2 required custom code: detect changes, close 
 {{ config(
     target_schema='snapshots',
     unique_key='customer_id',
-    strategy='timestamp',            -- timestamp | check
-    updated_at='updated_at',         -- for timestamp strategy
-    -- check_cols=['email', 'tier'], -- for check strategy (compares columns)
+    strategy='timestamp',
+    updated_at='updated_at',
     invalidate_hard_deletes=True
 ) }}
 
@@ -384,15 +390,15 @@ Result: snapshots.customers_snapshot
 dbt snapshot   # run snapshots
 ```
 
-> **💡 Interview tip:** "How do you implement SCD Type 2 in dbt?" Answer: dbt snapshots. The `timestamp` strategy detects changes by comparing `updated_at` values. The `check` strategy detects changes by comparing specific column values (useful when source data doesn't have a reliable `updated_at`). dbt automatically adds `dbt_valid_from`, `dbt_valid_to`, and `dbt_scd_id` columns. To query "what was this customer's tier at a specific date", filter `WHERE dbt_valid_from <= target_date AND (dbt_valid_to > target_date OR dbt_valid_to IS NULL)`.
+> **💡 Interview tip:** "How do you implement SCD Type 2 in dbt?" Answer: dbt snapshots. The `timestamp` strategy detects changes by comparing `updated_at` values. The `check` strategy detects changes by hashing selected columns. The dbt snapshot table automatically adds `dbt_valid_from`, `dbt_valid_to`, and `dbt_is_current` columns.
 
-> **🌍 Real world:** Run `dbt snapshot` before `dbt run` in your daily pipeline, so snapshots capture the current state of source tables before transformations run. If you run snapshots after, you might miss a day's worth of changes if a record was created and updated within the same day.
+> **🌍 Real world:** Run `dbt snapshot` before `dbt run` in your daily pipeline, so snapshots capture the current state of source tables before transformations run. If you run snapshots after, you'll miss any changes that happened during the `dbt run`.
 
 ---
 
 ## 9. Jinja Templating in dbt
 
-Jinja is a Python templating language that dbt uses to make SQL dynamic. The killer use case for DE is environment-specific behavior: in dev, limit queries to 1000 rows to iterate fast; in prod, process everything. This pattern alone saves enormous development time.
+Jinja is a Python templating language that dbt uses to make SQL dynamic. The killer use case for DE is environment-specific behavior: in dev, limit queries to 1000 rows to iterate fast; in prod, run on full data. Or: use a parameter to set `start_date` without editing SQL.
 
 ```sql
 -- Variables
@@ -422,7 +428,7 @@ FROM fct_orders
 
 ## 10. Macros
 
-Macros are reusable pieces of Jinja/SQL — think of them as functions for your SQL code. Instead of copy-pasting the same cents-to-dollars conversion in 15 models, write it once as a macro and call it everywhere. When the logic changes, change it in one place.
+Macros are reusable pieces of Jinja/SQL — think of them as functions for your SQL code. Instead of copy-pasting the same cents-to-dollars conversion in 15 models, write it once as a macro and call it 15 times.
 
 ```sql
 -- macros/cents_to_dollars.sql
@@ -452,7 +458,7 @@ FROM raw_orders
 
 ## 11. Packages
 
-dbt packages are shared libraries of macros, models, and tests. The `dbt_utils` package is nearly universal — it provides utilities like `surrogate_key()` (consistent cross-platform hashing for surrogate PKs), `date_spine` (generate a calendar table), and generic tests. `dbt_expectations` brings Great Expectations-style testing into native dbt YAML.
+dbt packages are shared libraries of macros, models, and tests. The `dbt_utils` package is nearly universal — it provides utilities like `surrogate_key()` (consistent cross-platform hashing for generating unique IDs), `recency()` testing, date spines, and more.
 
 ```yaml
 # packages.yml
@@ -481,7 +487,7 @@ dbt_meta_testing:    enforce documentation coverage
 
 ## 12. CLI Commands
 
-Understanding the selector syntax (`+`, `@`, folder paths, tags) is important for both development efficiency and CI optimization. Running `+fct_orders` (fct_orders and all upstream dependencies) is how you re-run a full lineage after changing a staging model.
+Understanding the selector syntax (`+`, `@`, folder paths, tags) is important for both development efficiency and CI optimization. Running `+fct_orders` (fct_orders and all upstream dependencies) is how you test a focused part of the DAG without building the whole warehouse.
 
 ```bash
 dbt run                          # run all models
@@ -507,15 +513,15 @@ dbt run --full-refresh           # force recreate incremental model from scratch
 dbt run --target prod            # run against prod profile
 ```
 
-> **💡 Interview tip:** `dbt run --full-refresh` on an incremental model drops and recreates the table from scratch, processing all historical data. Know when to use it: (1) after adding new columns to an incremental model (schema change), (2) after fixing a bug in the transformation logic that affected historical data, (3) on a scheduled basis (e.g., weekly) to correct late-arriving data the incremental filter missed.
+> **💡 Interview tip:** `dbt run --full-refresh` on an incremental model drops and recreates the table from scratch, processing all historical data. Know when to use it: (1) after adding new columns, (2) after changing business logic that affects historical correctness, (3) on a schedule (weekly) to catch late-arriving data.
 
-> **🌍 Real world:** In CI, you typically don't run the full dbt project on every PR — that would be expensive and slow. Instead, use the "slim CI" pattern: run only the models that changed and their downstream dependents. `dbt run --select state:modified+` (using dbt's state comparison against the production manifest) runs only what changed. This makes CI fast and cheap.
+> **🌍 Real world:** In CI, you typically don't run the full dbt project on every PR — that would be expensive and slow. Instead, use the "slim CI" pattern: run only the models that changed and their downstream dependents. This is supported by dbt Cloud's enhanced parsing, or by explicit selector logic in your CI config.
 
 ---
 
 ## 13. dbt + Airflow Integration
 
-dbt transformations typically run as a step in a larger Airflow DAG — after raw data is loaded by an ingestion job, dbt runs to transform it. The two common approaches are dbt Cloud (managed, with an API) or dbt Core running via BashOperator.
+dbt transformations typically run as a step in a larger Airflow DAG — after raw data is loaded by an ingestion job, dbt runs to transform it. The two common approaches are dbt Cloud (managed, with Airflow integration) or dbt Core (self-hosted, run via BashOperator).
 
 ```python
 from airflow.providers.dbt.cloud.operators.dbt import DbtCloudRunJobOperator
@@ -538,7 +544,7 @@ BashOperator(
 )
 ```
 
-> **🌍 Real world:** A mature dbt + Airflow integration typically looks like: (1) ingest raw data (Fivetran sync, Glue job, Kafka consumer), (2) `dbt source freshness` to validate raw data arrived, (3) `dbt run` to transform, (4) `dbt test` to validate output, (5) notify downstream consumers (Slack message, Tableau datasource refresh). Steps 2-4 are the dbt-specific piece; Airflow orchestrates the full pipeline including the non-dbt steps.
+> **🌍 Real world:** A mature dbt + Airflow integration typically looks like: (1) ingest raw data (Fivetran sync, Glue job, Kafka consumer), (2) `dbt source freshness` to validate raw data arrived, (3) `dbt run` to transform, (4) `dbt test` to validate output, (5) alerting on failures. Orchestrate all of this in Airflow with data-aware task dependencies.
 
 ---
 

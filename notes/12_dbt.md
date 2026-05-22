@@ -410,6 +410,7 @@ Jinja is a Python templating language that dbt uses to make SQL dynamic. The kil
 {{ env_var('DBT_ENV', 'dev') }}
 
 -- Conditionals
+{% raw %}
 {% if target.name == 'prod' %}
     LIMIT 1000000
 {% else %}
@@ -424,6 +425,7 @@ SELECT
     {%- if not loop.last %},{% endif %}
 {% endfor %}
 FROM fct_orders
+{% endraw %}
 ```
 
 ---

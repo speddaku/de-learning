@@ -357,6 +357,7 @@ Before dbt, implementing SCD Type 2 required custom code: detect changes, close 
 
 ```sql
 -- snapshots/customers_snapshot.sql
+{% raw %}
 {% snapshot customers_snapshot %}
 
 {{ config(
@@ -376,6 +377,7 @@ SELECT
 FROM {{ source('raw', 'customers') }}
 
 {% endsnapshot %}
+{% endraw %}
 ```
 
 ```
@@ -432,9 +434,11 @@ Macros are reusable pieces of Jinja/SQL — think of them as functions for your 
 
 ```sql
 -- macros/cents_to_dollars.sql
+{% raw %}
 {% macro cents_to_dollars(column_name, scale=2) %}
     ROUND({{ column_name }} / 100, {{ scale }})
 {% endmacro %}
+{% endraw %}
 
 -- Usage in model:
 SELECT
@@ -445,6 +449,7 @@ FROM raw_orders
 
 ```sql
 -- macros/generate_date_spine.sql
+{% raw %}
 {% macro date_spine(start_date, end_date) %}
     WITH date_series AS (
         SELECT DATEADD(day, seq, '{{ start_date }}'::DATE) AS date_day
@@ -452,6 +457,7 @@ FROM raw_orders
     )
     SELECT * FROM date_series
 {% endmacro %}
+{% endraw %}
 ```
 
 ---

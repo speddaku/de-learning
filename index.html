@@ -517,7 +517,7 @@ function showHome() {
           <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Topics Covered</div>
         </div>
         <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
-          <div style="font-size:26px;font-weight:700;color:#3fb950;">177</div>
+          <div style="font-size:26px;font-weight:700;color:#3fb950;">221</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Quiz Questions</div>
         </div>
         <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
@@ -535,7 +535,7 @@ function showHome() {
         <p>Welcome to your centralized technical study space. This platform functions as a lightweight, lightning-fast compiler for core data engineering concepts, designed to serve as both an interview prep kit and a production architectural reference.</p>
         <p>Instead of managing disorganized text files, this workspace aggregates and formats deep-dives across the modern data pipeline ecosystem—from initial programmatic extraction down to distributed storage and processing structures.</p>
         <blockquote>
-          <strong>Navigation Pro-Tip:</strong> Use the left-hand navigation panel to select an engineering domain. Press <strong>\</strong> to collapse/expand the panel. Click <strong>🎯 Mock Quiz</strong> at the bottom of the sidebar to test yourself with 177 randomized questions.
+          <strong>Navigation Pro-Tip:</strong> Use the left-hand navigation panel to select an engineering domain. Press <strong>\</strong> to collapse/expand the panel. Click <strong>🎯 Mock Quiz</strong> at the bottom of the sidebar to test yourself with 221 randomized questions.
         </blockquote>
         <h3 style="margin-top:24px;">Core Knowledge Domains</h3>
         <p>The study curriculum breaks down into 4 key system levels:</p>
@@ -753,6 +753,72 @@ const quizData = [
   { topic:'Terraform', q:'What does `deletion_protection` on a Terraform resource (e.g., RDS) prevent?', opts:['Terraform plan from showing changes','Other team members from modifying the resource','Accidental destruction of the resource via `terraform destroy`','Resource auto-scaling'], ans:2 },
   { topic:'Terraform', q:'What is a Terraform workspace?', opts:['A directory containing Terraform configuration files','A named isolated state environment (e.g., dev, staging, prod) within the same configuration','A remote module registry','A CI/CD pipeline for Terraform'], ans:1 },
 
+  // ── Kinesis ──
+  { topic:'Kinesis', q:'What is the difference between Kinesis Data Streams (KDS) and Kinesis Data Firehose?', opts:['KDS is cheaper; Firehose is faster','KDS: real-time, you manage consumers and retention; Firehose: fully managed delivery to S3/Redshift/OpenSearch with no consumer code','Firehose has lower latency than KDS','They are the same service with different names'], ans:1 },
+  { topic:'Kinesis', q:'What is a Kinesis shard and what are its throughput limits?', opts:['A partition with unlimited throughput','A shard = 1 MB/s write and 2 MB/s read; you scale by adding shards','A shard = 10 MB/s write and 10 MB/s read','A virtual node that auto-scales based on load'], ans:1 },
+  { topic:'Kinesis', q:'What is the default retention period for records in Kinesis Data Streams?', opts:['1 hour','24 hours (extendable up to 365 days)','7 days','Indefinite — records are never deleted'], ans:1 },
+  { topic:'Kinesis', q:'What is Kinesis Data Analytics (now Amazon Managed Service for Apache Flink) used for?', opts:['Storing streaming data to S3','Running SQL or Apache Flink applications on streaming data in real time','Monitoring Kinesis shard utilization','Replaying Kinesis streams from the beginning'], ans:1 },
+  { topic:'Kinesis', q:'What happens when a Kinesis shard is hot (one shard receives most of the writes)?', opts:['Kinesis automatically balances the load','You hit the 1 MB/s write limit on that shard, causing ProvisionedThroughputExceededException','The shard splits automatically','Other shards slow down'], ans:1 },
+  { topic:'Kinesis', q:'How does Kinesis Firehose handle data transformation before delivery to S3?', opts:['It cannot transform data','It calls a Lambda function to transform each batch before writing','It uses Glue ETL jobs inline','It applies Athena queries on the stream'], ans:1 },
+
+  // ── EMR ──
+  { topic:'EMR', q:'What is AWS EMR (Elastic MapReduce)?', opts:['A managed SQL query service','A managed cluster platform for running big data frameworks like Spark, Hive, and Presto at scale on EC2','A serverless batch processing service','An AWS-managed Kafka service'], ans:1 },
+  { topic:'EMR', q:'What is the difference between a transient and a persistent EMR cluster?', opts:['Transient clusters are faster','Transient: cluster terminates after the job completes (cost-efficient); Persistent: cluster stays running for interactive use','Persistent clusters cannot run Spark','Transient clusters cannot read from S3'], ans:1 },
+  { topic:'EMR', q:'What is EMR on EKS?', opts:['Running EMR jobs inside Docker containers','Submitting EMR Spark workloads to run as Kubernetes pods on an EKS cluster','A way to use EMR without EC2','An EKS add-on for monitoring Spark'], ans:1 },
+  { topic:'EMR', q:'What is EMRFS and why does it matter for Spark on EMR?', opts:['EMR File System — a proprietary format incompatible with S3','EMR File System — allows Spark jobs on EMR to read/write S3 as if it were HDFS, with consistent view support','A local SSD cache for EMR nodes','An alternative to HDFS that only works on EMR'], ans:1 },
+  { topic:'EMR', q:'What is EMR Instance Fleets vs Instance Groups?', opts:['Instance Fleets can only use On-Demand instances','Instance Fleets mix multiple instance types and purchase options (Spot + On-Demand) for cost savings; Instance Groups use a single type','Instance Groups are deprecated','They are the same feature'], ans:1 },
+
+  // ── Lake Formation ──
+  { topic:'Lake Formation', q:'What is AWS Lake Formation used for?', opts:['Storing data lakes on EBS','Centralized governance and fine-grained access control (column, row, cell level) on data lake resources','Running ETL jobs on S3 data','A replacement for Glue Data Catalog'], ans:1 },
+  { topic:'Lake Formation', q:'What is column-level security in AWS Lake Formation?', opts:['Encrypting specific columns with KMS','Granting a user access to only specific columns within a Glue/Athena table without exposing others','Masking PII columns in Redshift','A feature of S3 Object Lambda'], ans:1 },
+  { topic:'Lake Formation', q:'What is the Lake Formation "governed table" feature?', opts:['A table with row-level security only','Tables with ACID transactions and automatic compaction in S3, enabling concurrent reads and writes','A Glue table with schema validation','A Lake Formation table backed by DynamoDB'], ans:1 },
+  { topic:'Lake Formation', q:'How does Lake Formation integrate with the Glue Data Catalog?', opts:['It replaces the Glue Data Catalog entirely','Lake Formation uses the Glue Data Catalog as its metadata store and adds permission management on top of it','They are completely separate services','Lake Formation creates a separate metadata catalog'], ans:1 },
+
+  // ── Glue Advanced ──
+  { topic:'AWS', q:'What is a Glue job bookmark?', opts:['A saved Glue query in the console','State Glue maintains to track which data has already been processed, enabling incremental loads without reprocessing old data','A schedule trigger for a Glue job','A checkpoint file written to S3 by the Glue job'], ans:1 },
+  { topic:'AWS', q:'What does a Glue Crawler do?', opts:['Runs ETL transformations on S3 data','Automatically scans data stores (S3, RDS, DynamoDB) and populates the Glue Data Catalog with inferred schemas','Monitors Glue job failures','Compresses Parquet files in S3'], ans:1 },
+  { topic:'AWS', q:'What is AWS Glue DataBrew?', opts:['A Glue feature for running Spark SQL','A visual, no-code data preparation tool for cleaning and normalizing data','A data catalog browser','A Glue connector for Salesforce'], ans:1 },
+  { topic:'AWS', q:'What is a Glue Workflow?', opts:['A visual ETL editor','An orchestration tool to chain multiple Glue jobs and crawlers with dependencies and triggers','A Glue feature for scheduling jobs','A monitoring dashboard for Glue'], ans:1 },
+
+  // ── MSK ──
+  { topic:'MSK', q:'What is Amazon MSK (Managed Streaming for Apache Kafka)?', opts:['AWS\'s proprietary streaming service','A fully managed Apache Kafka service — AWS handles broker provisioning, patching, and scaling','A managed version of Kinesis','A serverless event bus'], ans:1 },
+  { topic:'MSK', q:'What is the key operational benefit of MSK over self-managed Kafka on EC2?', opts:['MSK is always cheaper','MSK eliminates broker management — no ZooKeeper/KRaft setup, patching, or replication configuration','MSK has higher throughput','MSK supports more partitions'], ans:1 },
+  { topic:'MSK', q:'What is MSK Serverless?', opts:['A pay-per-message Kafka pricing model','Automatically provisions and scales Kafka capacity — no shard/broker capacity planning needed','A Kafka API compatible service built on Kinesis','A read-only replica of an MSK cluster'], ans:1 },
+
+  // ── CloudWatch ──
+  { topic:'CloudWatch', q:'What is the difference between CloudWatch Metrics and CloudWatch Logs?', opts:['Metrics are for EC2 only; Logs work with all services','Metrics: numeric time-series data points (CPU, row counts); Logs: text log events from applications and services','Logs are cheaper than Metrics','They store the same data in different formats'], ans:1 },
+  { topic:'CloudWatch', q:'What is a CloudWatch Alarm?', opts:['A notification sent when a log error is detected','A rule that monitors a metric and triggers an action (SNS, Auto Scaling, Lambda) when it crosses a threshold','A scheduled CloudWatch Events rule','A CloudWatch dashboard widget'], ans:1 },
+  { topic:'CloudWatch', q:'What is CloudWatch Logs Insights?', opts:['A real-time log streaming feature','An interactive query language for analyzing log data in CloudWatch Logs','A log archiving tool','A log anomaly detection service'], ans:1 },
+  { topic:'CloudWatch', q:'What metric would you monitor in CloudWatch to detect a stalled data pipeline?', opts:['EC2 CPU utilization','A custom metric tracking row counts or records processed per run — a drop to 0 signals a stall','Lambda memory usage','S3 request count'], ans:1 },
+
+  // ── DynamoDB ──
+  { topic:'DynamoDB', q:'What makes DynamoDB well-suited for storing pipeline state, job checkpoints, or Terraform locks?', opts:['It supports complex SQL joins','Single-digit millisecond latency, serverless scaling, and conditional writes for safe concurrent access','It is the cheapest AWS storage option','It automatically syncs with S3'], ans:1 },
+  { topic:'DynamoDB', q:'What is DynamoDB Streams?', opts:['A Kinesis-based data delivery service','A near-real-time ordered log of item-level changes (INSERT, UPDATE, DELETE) in a DynamoDB table, usable for CDC','A read replica feature','A DynamoDB backup mechanism'], ans:1 },
+  { topic:'DynamoDB', q:'What is the difference between DynamoDB partition key and sort key?', opts:['Partition key is optional; sort key is required','Partition key determines which physical partition stores the item; sort key orders items within a partition, enabling range queries','They are aliases for the same concept','Sort key is used for global secondary indexes only'], ans:1 },
+  { topic:'DynamoDB', q:'What is a DynamoDB Global Secondary Index (GSI)?', opts:['An index that replicates the table to another region','An alternate index on non-primary-key attributes, allowing queries on different access patterns','A local copy of the table for faster reads','An index only available in the same partition'], ans:1 },
+
+  // ── Secrets & Security ──
+  { topic:'AWS', q:'What is the key difference between AWS Secrets Manager and AWS Systems Manager Parameter Store?', opts:['Parameter Store is deprecated','Secrets Manager: automatic secret rotation, higher cost; Parameter Store: simpler key-value store, free tier available','Parameter Store supports more secret types','They are functionally identical'], ans:1 },
+  { topic:'AWS', q:'What is AWS KMS (Key Management Service) used for?', opts:['Managing SSH keys for EC2','Creating, managing, and rotating encryption keys used to encrypt data in AWS services (S3, RDS, Glue, etc.)','A certificate authority for TLS','A password manager for IAM users'], ans:1 },
+  { topic:'AWS', q:'What is AWS CloudTrail used for in a data platform?', opts:['Monitoring application performance','Audit logging every AWS API call — who did what, when, and from where — for compliance and forensics','A CI/CD deployment service','A network traffic analyzer'], ans:1 },
+  { topic:'AWS', q:'What is envelope encryption in AWS KMS?', opts:['Encrypting data twice with two different KMS keys','Data is encrypted with a plaintext data key; the data key itself is then encrypted by a KMS CMK — only the encrypted key is stored','A method to encrypt S3 object metadata','A KMS feature for cross-account key sharing'], ans:1 },
+
+  // ── AWS Batch & MWAA ──
+  { topic:'AWS', q:'What is AWS Batch used for in data engineering?', opts:['Real-time stream processing','Running containerized batch data processing jobs at any scale without managing servers','A replacement for Glue ETL jobs','A Lambda scheduling service'], ans:1 },
+  { topic:'AWS', q:'What is Amazon MWAA (Managed Workflows for Apache Airflow)?', opts:['A proprietary AWS workflow service','Fully managed Apache Airflow on AWS — no infra to manage, auto-scales workers, integrates natively with AWS services','A visual workflow editor for Step Functions','A managed version of Prefect'], ans:1 },
+  { topic:'AWS', q:'When would you choose MWAA over self-managed Airflow?', opts:['When you need more than 16 DAGs','When you want AWS to handle Airflow infra, patching, and scaling — trading customization for operational simplicity','MWAA is always preferred','When you need Celery executor'], ans:1 },
+
+  // ── S3 Advanced ──
+  { topic:'AWS', q:'What is S3 Event Notification used for in data pipelines?', opts:['Notifying users when S3 costs exceed a budget','Triggering Lambda, SQS, or SNS automatically when a file lands in S3 — enabling event-driven ingestion pipelines','Monitoring S3 bucket access patterns','Alerting on S3 replication lag'], ans:1 },
+  { topic:'AWS', q:'What is S3 Select?', opts:['A GUI for browsing S3 objects','Filtering and retrieving only a subset of data from a single S3 object using SQL expressions, reducing data transferred','A feature to select multiple S3 buckets at once','An S3 query service similar to Athena'], ans:1 },
+  { topic:'AWS', q:'What is S3 Intelligent-Tiering?', opts:['An S3 feature that selects the cheapest region','Automatically moves objects between access tiers (frequent, infrequent, archive) based on changing access patterns, with no retrieval fees','A fixed storage class for ML training data','A tiering mechanism that requires manual configuration'], ans:1 },
+  { topic:'AWS', q:'What is S3 multipart upload and when should you use it?', opts:['Uploading to multiple S3 buckets simultaneously','Splitting large files into parts uploaded in parallel — recommended for files >100MB; required for files >5GB','Uploading multiple small files in a single API call','A feature for resuming failed S3 uploads automatically'], ans:1 },
+
+  // ── OpenSearch & Redshift Advanced ──
+  { topic:'AWS', q:'What is Amazon OpenSearch Service used for in data engineering?', opts:['Columnar analytics on S3','Log analytics, full-text search, and real-time dashboards on streaming or indexed data','A replacement for Redshift','A managed Elasticsearch for SQL queries'], ans:1 },
+  { topic:'AWS', q:'What is Redshift Serverless?', opts:['Redshift with no storage limits','Run Redshift queries without provisioning or managing clusters — auto-scales compute and you pay per query','A read-only replica of a Redshift cluster','A feature that converts Redshift to a row-based store'], ans:1 },
+  { topic:'AWS', q:'What is the AWS Glue Schema Registry?', opts:['A UI for browsing Glue Data Catalog schemas','A centralized service to register, validate, and evolve Avro/JSON/Protobuf schemas for streaming data (Kafka, Kinesis)','A schema migration tool for RDS','A Glue feature that infers schemas from Parquet files'], ans:1 },
+
   // ── Modern Stack ──
   { topic:'Modern Stack', q:'What does Delta Lake add on top of a standard data lake?', opts:['Faster S3 upload speeds via multi-part API','ACID transactions, time travel, schema enforcement, and upsert (MERGE) support on data lake files','Automatic data compression to Snappy','Serverless query execution similar to Athena'], ans:1 },
   { topic:'Modern Stack', q:'What is Z-ORDER in Delta Lake?', opts:['Orders partitions alphabetically for faster listing','A compression algorithm for Parquet files','Co-locates related data in the same files to improve data skipping for multi-column filter queries','Sorts data within partitions by a primary key'], ans:2 },
@@ -795,7 +861,7 @@ function showQuiz() {
   document.getElementById('page-content').innerHTML = `
     <div id="quiz-page">
       <div class="quiz-page-title">Mock Quiz</div>
-      <p class="quiz-page-sub">${quizData.length} questions across 16 topics · shuffled every time</p>
+      <p class="quiz-page-sub">${quizData.length} questions across 21 topics · shuffled every time</p>
       <div class="quiz-start-card">
         <h3>Configure your session</h3>
         <div class="quiz-filter-row">

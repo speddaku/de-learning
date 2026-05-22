@@ -225,6 +225,80 @@
     .arrow-btn:disabled { opacity: 0.3; cursor: default; }
     .nav-item.hidden { display: none; }
 
+    /* ── QUIZ ── */
+    .quiz-divider { border-top: 1px solid var(--border); margin: 6px 8px 4px; }
+    .quiz-nav-btn {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: 6px; cursor: pointer;
+      transition: background .12s; margin: 0 0 8px;
+    }
+    .quiz-nav-btn:hover { background: rgba(88,166,255,0.08); }
+    .quiz-nav-btn.active { background: var(--active-bg); }
+    .quiz-nav-btn .nav-label { color: var(--text); }
+    .quiz-nav-btn.active .nav-label { color: var(--accent); }
+
+    #quiz-page { padding: 40px 40px 80px; max-width: 860px; margin: 0 auto; }
+    .quiz-page-title { font-size: 26px; font-weight: 700; color: var(--heading-color); margin-bottom: 6px; }
+    .quiz-page-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
+
+    .quiz-start-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px; }
+    .quiz-start-card h3 { font-size: 16px; color: var(--heading-color); margin-bottom: 14px; }
+    .quiz-filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 22px; }
+    .quiz-filter-label { font-size: 13px; color: var(--text-muted); }
+    .quiz-select { background: var(--search-bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 7px 12px; font-size: 13px; outline: none; cursor: pointer; }
+    .quiz-select:focus { border-color: var(--accent); }
+    .btn-start-quiz { background: var(--accent); color: #0d1117; border: none; border-radius: 6px; padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .12s; }
+    .btn-start-quiz:hover { background: var(--accent-hover); }
+
+    .quiz-progress-wrap { margin-bottom: 20px; }
+    .quiz-progress-bar { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; margin-bottom: 6px; }
+    .quiz-progress-fill { background: var(--accent); height: 100%; border-radius: 4px; transition: width .35s ease; }
+    .quiz-progress-text { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+
+    .quiz-topic-badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 12px; background: rgba(88,166,255,0.1); color: var(--accent); border: 1px solid rgba(88,166,255,0.2); margin-bottom: 10px; font-weight: 500; }
+    .quiz-question-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 14px; }
+    .quiz-q-text { font-size: 15.5px; font-weight: 500; color: var(--heading-color); line-height: 1.6; margin-bottom: 20px; }
+    .quiz-options { display: flex; flex-direction: column; gap: 9px; }
+    .quiz-opt {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 7px; padding: 12px 16px; color: var(--text);
+      font-size: 14px; cursor: pointer; transition: border-color .12s, background .12s;
+      text-align: left; line-height: 1.4; width: 100%;
+    }
+    .quiz-opt:hover:not(.locked) { border-color: var(--accent); background: rgba(88,166,255,0.07); }
+    .quiz-opt.locked { cursor: default; }
+    .quiz-opt.correct { border-color: #3fb950 !important; background: rgba(63,185,80,0.1) !important; }
+    .quiz-opt.wrong   { border-color: #f85149 !important; background: rgba(248,81,73,0.09) !important; }
+    .quiz-opt-letter { font-weight: 700; font-size: 12px; color: var(--text-muted); min-width: 18px; margin-top: 1px; flex-shrink: 0; }
+    .quiz-opt.correct .quiz-opt-letter { color: #3fb950; }
+    .quiz-opt.wrong   .quiz-opt-letter { color: #f85149; }
+
+    .quiz-action-row { display: flex; justify-content: flex-end; margin-top: 14px; }
+    .btn-quiz-next { background: var(--accent); color: #0d1117; border: none; border-radius: 6px; padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .12s; }
+    .btn-quiz-next:hover { background: var(--accent-hover); }
+    .btn-quiz-next:disabled { opacity: 0.3; cursor: default; }
+
+    .quiz-result-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 36px; text-align: center; }
+    .quiz-score-big { font-size: 62px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+    .quiz-score-label { font-size: 14px; color: var(--text-muted); margin-bottom: 22px; }
+    .quiz-stats-row { display: flex; gap: 16px; justify-content: center; margin-bottom: 26px; flex-wrap: wrap; }
+    .quiz-stat { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; min-width: 90px; }
+    .quiz-stat-num { font-size: 22px; font-weight: 700; color: var(--heading-color); }
+    .quiz-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .quiz-result-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-retry { background: var(--accent); color: #0d1117; border: none; border-radius: 6px; padding: 9px 22px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .12s; }
+    .btn-retry:hover { background: var(--accent-hover); }
+    .btn-review-wrong { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; padding: 9px 22px; font-size: 14px; cursor: pointer; transition: border-color .12s, color .12s; }
+    .btn-review-wrong:hover { border-color: var(--accent); color: var(--accent); }
+
+    .quiz-review-section { margin-top: 28px; text-align: left; }
+    .quiz-review-section h4 { font-size: 15px; color: var(--heading-color); margin-bottom: 14px; }
+    .quiz-review-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+    .quiz-review-q { font-size: 14px; color: var(--heading-color); margin-bottom: 6px; font-weight: 500; }
+    .quiz-review-your { font-size: 12px; color: #f85149; margin-bottom: 3px; }
+    .quiz-review-ans  { font-size: 12px; color: #3fb950; }
+
     @media (max-width: 768px) {
       #sidebar { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-100%); margin-left: 0 !important; }
       body.sidebar-open #sidebar { transform: translateX(0); }
@@ -235,6 +309,7 @@
       #home { padding: 32px 16px 60px; }
       #home h2 { font-size: 24px; }
       #home p.subtitle { margin-bottom: 24px; font-size: 14px; }
+      #quiz-page { padding: 24px 16px 60px; }
     }
   </style>
 </head>
@@ -252,6 +327,12 @@
     <input id="search" type="text" placeholder="Search topics..." autocomplete="off" />
   </div>
   <div id="nav-list"></div>
+  <div class="quiz-divider"></div>
+  <div class="quiz-nav-btn" id="quiz-nav-btn" onclick="showQuiz(); closeMobileSidebar();">
+    <span class="nav-num">🎯</span>
+    <span class="nav-icon"></span>
+    <span class="nav-label">Mock Quiz</span>
+  </div>
 </nav>
 
 <main id="main">
@@ -293,7 +374,7 @@ const notes = [
   { id: '16', file: 'notes/16_modern_stack.md', title: 'Modern Stack & AI', icon: '🤖' }
 ];
 
-let currentIndex = -1; 
+let currentIndex = -1;
 const cache = {};
 
 const navList = document.getElementById('nav-list');
@@ -352,6 +433,7 @@ async function loadNote(index) {
   const note = notes[index];
 
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('quiz-nav-btn').classList.remove('active');
   const activeItem = document.querySelector(`.nav-item[data-index="${index}"]`);
   if (activeItem) {
     activeItem.classList.add('active');
@@ -407,7 +489,7 @@ document.addEventListener('keydown', e => {
     toggleSidebar();
   }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    if (currentIndex < notes.length - 1) loadNote(currentIndex + 1);
+    if (currentIndex >= 0 && currentIndex < notes.length - 1) loadNote(currentIndex + 1);
   }
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
     if (currentIndex > 0) loadNote(currentIndex - 1);
@@ -417,6 +499,7 @@ document.addEventListener('keydown', e => {
 function showHome() {
   currentIndex = -1;
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('quiz-nav-btn').classList.remove('active');
   document.getElementById('top-bar-title').textContent = 'Home';
   document.getElementById('top-bar-meta').textContent = '';
   document.getElementById('btn-prev').disabled = true;
@@ -427,16 +510,15 @@ function showHome() {
     <div id="home">
       <h2>Data Engineer Study Notes</h2>
       <p class="subtitle">Comprehensive reference engineering guides built from scratch.</p>
-      
-      <!-- Metrics Row -->
+
       <div style="display:flex;gap:24px;margin-bottom:32px;flex-wrap:wrap;">
         <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
           <div style="font-size:26px;font-weight:700;color:var(--accent);">16</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Topics Covered</div>
         </div>
         <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
-          <div style="font-size:26px;font-weight:700;color:#3fb950;">96</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Core Concepts</div>
+          <div style="font-size:26px;font-weight:700;color:#3fb950;">177</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Quiz Questions</div>
         </div>
         <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
           <div style="font-size:26px;font-weight:700;color:#e3b341;">~200KB</div>
@@ -448,17 +530,13 @@ function showHome() {
         </div>
       </div>
 
-      <!-- About Page Content Block -->
       <div class="about-section">
         <h3>About This Project</h3>
         <p>Welcome to your centralized technical study space. This platform functions as a lightweight, lightning-fast compiler for core data engineering concepts, designed to serve as both an interview prep kit and a production architectural reference.</p>
-        
         <p>Instead of managing disorganized text files, this workspace aggregates and formats deep-dives across the modern data pipeline ecosystem—from initial programmatic extraction down to distributed storage and processing structures.</p>
-        
         <blockquote>
-          <strong>Navigation Pro-Tip:</strong> Use the left-hand navigation panel to select an engineering domain. You can press the backslash key (<strong>\</strong>) on your keyboard at any point to completely open or collapse the panel for an immersive, widescreen code-reading layout.
+          <strong>Navigation Pro-Tip:</strong> Use the left-hand navigation panel to select an engineering domain. Press <strong>\</strong> to collapse/expand the panel. Click <strong>🎯 Mock Quiz</strong> at the bottom of the sidebar to test yourself with 177 randomized questions.
         </blockquote>
-
         <h3 style="margin-top:24px;">Core Knowledge Domains</h3>
         <p>The study curriculum breaks down into 4 key system levels:</p>
         <ul>
@@ -476,6 +554,379 @@ document.getElementById('sidebar-header').addEventListener('click', () => {
   showHome();
   closeMobileSidebar();
 });
+
+// ─────────────────────────────────────────────────────────────
+//  QUIZ
+// ─────────────────────────────────────────────────────────────
+const quizData = [
+  // ── Python ──
+  { topic:'Python', q:'What does the `yield` keyword do in Python?', opts:['Makes the function a generator that produces values lazily','Returns a value and immediately exits the function','Pauses execution and waits for external input','Raises a StopIteration exception'], ans:0 },
+  { topic:'Python', q:'Which pandas operation is 10-100× slower than vectorized column math and should be avoided in production?', opts:['.groupby() aggregations','.merge() on large DataFrames','.apply() with a plain Python function','.pivot_table() with margins'], ans:2 },
+  { topic:'Python', q:'What does `@functools.wraps(func)` do inside a decorator?', opts:['Copies the function source code to the wrapper','Preserves the original function\'s __name__, __doc__, and other metadata','Makes the decorator thread-safe','Prevents the decorator from being stacked'], ans:1 },
+  { topic:'Python', q:'What is the difference between `copy.copy()` and `copy.deepcopy()`?', opts:['deepcopy is faster for large objects','copy.copy() already copies nested objects','deepcopy recursively copies all nested objects; copy is shallow','They produce identical results'], ans:2 },
+  { topic:'Python', q:'What does the Global Interpreter Lock (GIL) do in CPython?', opts:['Prevents two threads from executing Python bytecode simultaneously','Allocates memory globally for all threads','Acts as a global mutex for I/O operations only','Speeds up single-threaded programs'], ans:0 },
+  { topic:'Python', q:'What does a context manager (`with` statement) guarantee?', opts:['Code runs in a separate subprocess','__exit__ runs even if an exception occurs inside the block','Variables are garbage collected immediately','Memory is pre-allocated before the block runs'], ans:1 },
+  { topic:'Python', q:'What is the key difference between `@classmethod` and `@staticmethod`?', opts:['classmethod is faster at runtime','classmethod receives `cls` as first arg; staticmethod receives no implicit arg','staticmethod can access instance attributes','They are completely interchangeable'], ans:1 },
+  { topic:'Python', q:'What does `*args` capture in a function signature?', opts:['Keyword arguments as a dict','All arguments flattened into a list','Extra positional arguments as a tuple','Only the first positional argument'], ans:2 },
+  { topic:'Python', q:'How does a Python generator differ from a list in terms of memory?', opts:['Generators use more memory because of the frame object','Generators produce values lazily one at a time, holding nothing else in memory','Lists are more memory-efficient for small data','Generators copy data to disk automatically'], ans:1 },
+  { topic:'Python', q:'What is the pandas chained assignment trap?', opts:['`df[mask][\'col\'] = val` modifies a copy, not the original DataFrame','It raises a ValueError on integer columns','It creates duplicate rows in the index','It resets the DataFrame index automatically'], ans:0 },
+  { topic:'Python', q:'What does `__slots__` do in a Python class?', opts:['Creates class-level shared attributes','Enables operator overloading automatically','Limits which instance attributes can exist, reducing per-object memory','Makes all attributes read-only'], ans:2 },
+  { topic:'Python', q:'What is the difference between `__init__` and `__new__`?', opts:['__new__ initializes attributes; __init__ allocates memory','__init__ is called after __new__; __new__ creates the object instance','They are aliases for the same method','__new__ only runs on subclasses'], ans:1 },
+  { topic:'Python', q:'Which built-in function is the correct way to iterate over index-value pairs in a list?', opts:['zip(list)','map(index, list)','enumerate(list)','range(len(list))'], ans:2 },
+
+  // ── SQL ──
+  { topic:'SQL', q:'What is the difference between RANK() and DENSE_RANK()?', opts:['RANK is faster on large datasets','DENSE_RANK does not skip numbers after a tie','RANK works only inside a subquery','They produce identical output always'], ans:1 },
+  { topic:'SQL', q:'What does PARTITION BY do in a window function?', opts:['Physically splits the table into shards','Creates a temporary index on the column','Divides rows into independent groups for the window calculation','Sorts the final result set'], ans:2 },
+  { topic:'SQL', q:'What is the key difference between WHERE and HAVING?', opts:['HAVING is faster for large tables','WHERE filters rows before aggregation; HAVING filters groups after GROUP BY','WHERE only works with JOIN clauses','They are fully interchangeable'], ans:1 },
+  { topic:'SQL', q:'What does `EXPLAIN ANALYZE` do in PostgreSQL (vs plain EXPLAIN)?', opts:['Shows estimated plan without executing the query','Actually executes the query and shows real timing and row counts','Updates table statistics','Automatically rewrites the query for better performance'], ans:1 },
+  { topic:'SQL', q:'What does `NULLIF(a, b)` return?', opts:['The larger of a and b','0 if either argument is NULL','NULL if a equals b, otherwise returns a','b if a is NULL'], ans:2 },
+  { topic:'SQL', q:'What is a dirty read in database transactions?', opts:['Reading from a table without an index','Reading data written by a transaction that has not yet committed','Reading after a network timeout','Reading from a corrupted block'], ans:1 },
+  { topic:'SQL', q:'What is SCD Type 2 used for in data warehousing?', opts:['Overwriting old values in place with no history','Deleting records that have changed','Tracking history by inserting new rows with start/end validity timestamps','Archiving records to cold storage'], ans:2 },
+  { topic:'SQL', q:'How does a CTE (WITH clause) improve readability over nested subqueries?', opts:['CTEs are always faster to execute','CTEs read top-to-bottom like a pipeline; nested subqueries read inside-out','CTEs are automatically cached by the optimizer','CTEs support recursive queries; subqueries do not'], ans:1 },
+  { topic:'SQL', q:'What index type does PostgreSQL use by default when you run CREATE INDEX?', opts:['Hash','GIN','GiST','B-tree'], ans:3 },
+  { topic:'SQL', q:'What is the top-N-per-group pattern using window functions?', opts:['Use LIMIT with GROUP BY','Use DISTINCT ON with ORDER BY','ROW_NUMBER() OVER (PARTITION BY group ORDER BY value) then filter WHERE rn <= N','Use MIN() in a correlated subquery'], ans:2 },
+  { topic:'SQL', q:'What does a CROSS JOIN produce?', opts:['Only matching rows from both tables','All rows from the left table including NULLs for no-matches','The Cartesian product — every combination of rows from both tables','Rows that exist in one table but not the other'], ans:2 },
+  { topic:'SQL', q:'What does the COALESCE function do?', opts:['Returns the maximum non-NULL value','Returns the first non-NULL argument in the list','Converts NULL to zero always','Compares two values and returns the larger'], ans:1 },
+  { topic:'SQL', q:'What is the difference between a correlated subquery and a regular subquery?', opts:['Correlated subqueries run once; regular subqueries run per row','A correlated subquery references a column from the outer query and re-runs per outer row','Regular subqueries cannot return multiple rows','They are identical in execution'], ans:1 },
+
+  // ── Data Modeling ──
+  { topic:'Data Modeling', q:'What is the "grain" of a fact table?', opts:['The primary key column name','The level of detail that each row represents','The number of rows in the table','The date dimension join column'], ans:1 },
+  { topic:'Data Modeling', q:'Why is a surrogate key used instead of a natural key in SCD Type 2?', opts:['Natural keys are too long for indexes','A surrogate key uniquely identifies a specific historical version of an entity','Natural keys are not unique across systems','Surrogate keys improve query performance'], ans:1 },
+  { topic:'Data Modeling', q:'What is the key structural difference between a star schema and a snowflake schema?', opts:['Star schema has more tables','Snowflake schema is always faster for queries','Star schema has denormalized dimensions; snowflake normalizes dimensions into sub-tables','They are identical — the terms are synonyms'], ans:2 },
+  { topic:'Data Modeling', q:'What is Third Normal Form (3NF)?', opts:['No NULL values in any column','Every non-key column depends only on the primary key, not on other non-key columns','All columns must be indexed','Tables may have at most 3 columns'], ans:1 },
+  { topic:'Data Modeling', q:'What is the medallion architecture\'s Bronze layer?', opts:['Cleaned and validated data ready for analysis','Aggregated data for BI consumption','Raw data exactly as received from the source system','Encrypted sensitive data vault'], ans:2 },
+  { topic:'Data Modeling', q:'What is a degenerate dimension?', opts:['A dimension with mostly NULL values','A dimension attribute stored directly in the fact table with no separate dimension table','An outdated dimension no longer in use','A dimension with only one possible value'], ans:1 },
+  { topic:'Data Modeling', q:'What is the difference between SCD Type 1 and SCD Type 2?', opts:['Type 1 inserts a new row; Type 2 overwrites the old value','Type 1 overwrites with no history; Type 2 inserts a new row preserving history','Type 2 is always faster','They apply to different types of dimension tables'], ans:1 },
+  { topic:'Data Modeling', q:'What is a junk dimension?', opts:['An unused dimension table from a legacy system','A dimension for flagged/deleted records','A table that combines several low-cardinality flags and indicators into one dimension','A dimension with inconsistent data'], ans:2 },
+  { topic:'Data Modeling', q:'What does "schema-on-read" mean?', opts:['The schema file is stored separately from the data','Schema is applied at query time, not enforced when data is written','The schema is read-only and cannot be changed','Data is validated before storage'], ans:1 },
+  { topic:'Data Modeling', q:'What is a Data Vault Hub table?', opts:['Contains descriptive attributes for an entity','Links two or more business keys together','Stores only the business key and a hash key for a business entity','Stores all historical changes for an entity'], ans:2 },
+  { topic:'Data Modeling', q:'What is the most common interview trap about fact table grain?', opts:['Forgetting to add a date dimension','Defining grain too vaguely (e.g., "one row per order") vs precisely (e.g., "one row per order line item")','Using surrogate keys instead of natural keys','Mixing measures and dimensions in the same table'], ans:1 },
+
+  // ── Data Warehousing ──
+  { topic:'Data Warehousing', q:'Why does columnar storage improve analytical query performance?', opts:['It stores data in RAM permanently','It automatically creates indexes on every column','It only reads the columns referenced in the query, skipping irrelevant data','It eliminates the need for JOINs'], ans:2 },
+  { topic:'Data Warehousing', q:'What does a Redshift distribution key (DISTKEY) control?', opts:['The sort order of data on disk','The primary key uniqueness constraint','Which node stores each row — matching DISTKEY on joined tables eliminates the shuffle','Which columns are compressed'], ans:2 },
+  { topic:'Data Warehousing', q:'What does Redshift SORTKEY enable?', opts:['Faster aggregation on any column','Zone map filtering — Redshift can skip entire blocks based on sorted column ranges','Automatic partitioning of large tables','Faster INSERT operations'], ans:1 },
+  { topic:'Data Warehousing', q:'How does Snowflake\'s zero-copy clone work internally?', opts:['It copies all data to a new location immediately','It uses copy-on-write — the clone shares storage blocks until either is modified','It creates a view of the original table','It stores only the diff between original and clone'], ans:1 },
+  { topic:'Data Warehousing', q:'What is Snowflake Time Travel?', opts:['A feature to schedule queries for future execution','The ability to query data as it existed at a past timestamp or version number','An audit log of all DML operations','Automatic rollback on failed transactions'], ans:1 },
+  { topic:'Data Warehousing', q:'What is the difference between Redshift DISTKEY ALL and DISTKEY EVEN?', opts:['ALL is for large tables; EVEN for small dimension tables','ALL copies the entire table to every node; EVEN distributes rows round-robin','They produce identical query plans','EVEN is always faster than ALL'], ans:1 },
+  { topic:'Data Warehousing', q:'What does VACUUM do in Redshift?', opts:['Analyzes slow queries and suggests indexes','Optimizes JOIN order','Reclaims disk space from deleted/updated rows and re-sorts unsorted regions','Removes duplicate rows'], ans:2 },
+  { topic:'Data Warehousing', q:'What query anti-pattern kills both Redshift zone map filtering and Snowflake micro-partition pruning?', opts:['Using a subquery in the WHERE clause','Wrapping the date column in a function: WHERE YEAR(sale_date) = 2025','Using OR instead of IN','Joining more than 5 tables'], ans:1 },
+  { topic:'Data Warehousing', q:'What is Snowpipe?', opts:['A Snowflake CLI pipeline tool','A streaming SQL feature','Continuous auto-ingestion that loads files from S3 into Snowflake as soon as they arrive','A Kafka connector for Snowflake'], ans:2 },
+  { topic:'Data Warehousing', q:'What is the difference between OLTP and OLAP?', opts:['OLTP is newer than OLAP','OLTP optimizes for concurrent short transactional writes; OLAP optimizes for large analytical reads','OLAP is row-based; OLTP is columnar','They are the same with different names'], ans:1 },
+  { topic:'Data Warehousing', q:'What is Redshift Spectrum?', opts:['A query caching layer','A machine learning service','A feature that queries S3 data directly via Redshift without loading it first','A data encryption service'], ans:2 },
+
+  // ── AWS ──
+  { topic:'AWS', q:'What does IAM "least privilege" mean in practice?', opts:['Use root credentials only for billing','Rotate credentials every 90 days','Grant only the minimum permissions needed for the specific task','Enable MFA for all users'], ans:2 },
+  { topic:'AWS', q:'What is the AWS Glue Data Catalog?', opts:['A data storage service for Parquet files','A managed metadata repository for table schemas, partitions, and databases','An ETL visual job editor','A data quality validation service'], ans:1 },
+  { topic:'AWS', q:'What is the key advantage of a Glue DynamicFrame over a Spark DataFrame?', opts:['DynamicFrame is faster for large joins','DynamicFrame tolerates schema inconsistencies (ChoiceType) without crashing','DynamicFrame supports Python UDFs','DynamicFrame auto-scales the cluster'], ans:1 },
+  { topic:'AWS', q:'What causes a Lambda "cold start"?', opts:['Slow S3 read speeds','Initializing a new execution environment when no warm container is available','Large memory allocation (>1 GB)','Using Python instead of Node.js'], ans:1 },
+  { topic:'AWS', q:'What does Athena Partition Projection do?', opts:['Automatically creates partitions when data arrives','Eliminates Glue Catalog API calls by encoding partition layout in table properties','Projects query cost before running','Materializes frequently-queried results'], ans:1 },
+  { topic:'AWS', q:'What is a VPC Endpoint in AWS?', opts:['A load balancer entry point','A private DNS record for internal services','A private connection to AWS services that doesn\'t traverse the public internet','A NAT Gateway replacement for external traffic'], ans:2 },
+  { topic:'AWS', q:'What is the IAM trust policy of a role?', opts:['Lists all the actions the role can perform','Specifies which principals (services, accounts) are allowed to assume the role','Controls cross-region access','Defines the role\'s resource boundaries'], ans:1 },
+  { topic:'AWS', q:'Which AWS service lets you run serverless SQL queries directly on S3 without loading data?', opts:['Redshift Spectrum','Amazon EMR','AWS Glue Studio','Amazon Athena'], ans:3 },
+  { topic:'AWS', q:'What is the key difference between SQS and SNS?', opts:['SQS is faster than SNS','SQS is a persistent point-to-point queue; SNS is a pub/sub fan-out service','SNS retains messages longer','They are the same service with different names'], ans:1 },
+  { topic:'AWS', q:'What is AWS Step Functions used for in data engineering?', opts:['Real-time stream processing','Object versioning in S3','Orchestrating multi-step workflows as state machines','Database connection pooling'], ans:2 },
+  { topic:'AWS', q:'What S3 storage class is designed for archival with retrieval times of minutes to hours?', opts:['S3 Standard-IA','S3 One Zone-IA','S3 Intelligent-Tiering','S3 Glacier Deep Archive'], ans:3 },
+  { topic:'AWS', q:'Why is over-partitioning in Athena a performance problem?', opts:['Partitions require more IAM permissions','Too many tiny files cause slow S3 LIST operations and metadata overhead','Partitions break columnar storage','Athena has a hard limit on partition count'], ans:1 },
+
+  // ── ETL ──
+  { topic:'ETL', q:'What is the key operational difference between ETL and ELT?', opts:['ETL is older technology','ETL transforms data before loading into the warehouse; ELT loads raw data first then transforms inside the warehouse','ELT requires more compute','They always produce identical outcomes'], ans:1 },
+  { topic:'ETL', q:'What is Change Data Capture (CDC)?', opts:['A method comparing two full table snapshots to find differences','Capturing row-level inserts, updates, and deletes from a database\'s transaction log','A CloudWatch monitoring technique','Schema drift detection'], ans:1 },
+  { topic:'ETL', q:'What does idempotency mean for a data pipeline?', opts:['The pipeline runs in parallel without conflicts','Running the pipeline multiple times produces the same result without side effects','The pipeline is reversible','The pipeline is fault-tolerant and retries automatically'], ans:1 },
+  { topic:'ETL', q:'What is the primary advantage of Parquet over CSV for analytical workloads?', opts:['Parquet is human-readable in a text editor','Parquet\'s columnar layout with compression dramatically reduces I/O for column-selective queries','Parquet supports all SQL data types','Parquet files are always smaller than CSV regardless of content'], ans:1 },
+  { topic:'ETL', q:'What is schema evolution?', opts:['Migrating from one database system to another','Automatically detecting and fixing schema mismatches','Adding/removing columns without breaking existing downstream consumers','Converting between file formats'], ans:2 },
+  { topic:'ETL', q:'What is a watermark in streaming pipelines?', opts:['A checkpoint file written after each batch','A timestamp-based threshold defining how late data can arrive and still be processed','A data quality marker in each record','A Kafka partition offset boundary'], ans:1 },
+  { topic:'ETL', q:'What is the difference between at-least-once and exactly-once delivery semantics?', opts:['At-least-once is always faster','Exactly-once is simpler to implement','At-least-once may process duplicates; exactly-once guarantees each message is processed exactly one time','They are equivalent in practice'], ans:2 },
+  { topic:'ETL', q:'What is backfilling in the context of a data pipeline?', opts:['Filling NULL values with default values','Reprocessing historical data through a pipeline after a bug fix or new business logic','Pre-loading cached results for future queries','Adding documentation to pipeline code'], ans:1 },
+  { topic:'ETL', q:'What file format is best suited for Kafka message serialization with schema embedded?', opts:['CSV','JSON','Parquet','Avro'], ans:3 },
+  { topic:'ETL', q:'What makes a pipeline "full load" vs "incremental"?', opts:['Full load uses more CPU; incremental uses more memory','Full load reloads all data each run; incremental only processes new or changed records','Incremental requires more storage','Full load is only used for small tables'], ans:1 },
+
+  // ── Spark ──
+  { topic:'Spark', q:'What is lazy evaluation in Spark?', opts:['Spark runs jobs at low CPU priority','Transformations build a DAG but do not execute until an action is triggered','Spark caches all intermediate results automatically','Jobs are queued and run in the background'], ans:1 },
+  { topic:'Spark', q:'What is the difference between a Spark transformation and an action?', opts:['Actions are always faster than transformations','Transformations return DataFrames lazily; actions trigger execution and return a result to the driver','Transformations modify data in place','Actions are optional optimizations'], ans:1 },
+  { topic:'Spark', q:'Why is a Spark shuffle expensive?', opts:['Shuffles sort data in memory using merge sort','Shuffles involve writing data to disk and transferring it across the network between executors','Shuffles require stopping all running tasks','Shuffles only affect the driver node'], ans:1 },
+  { topic:'Spark', q:'What is a broadcast join in Spark?', opts:['A join that runs in parallel on all executors','The small table is replicated to every executor so the large table never needs to shuffle','A join using broadcast variables for keys','A distributed hash join across multiple clusters'], ans:1 },
+  { topic:'Spark', q:'What is the difference between `repartition()` and `coalesce()`?', opts:['coalesce can also increase partition count','repartition does a full shuffle and supports any count; coalesce merges partitions without a full shuffle (only reduces)','They are identical in behavior','repartition is always preferred'], ans:1 },
+  { topic:'Spark', q:'What does `cache()` do vs `persist()` in Spark?', opts:['cache() is permanent; persist() is temporary','cache() is a shortcut for persist(MEMORY_AND_DISK); persist() lets you choose the storage level','They are identical','persist() is deprecated in Spark 3'], ans:1 },
+  { topic:'Spark', q:'What is Adaptive Query Execution (AQE) in Spark 3?', opts:['Auto-scaling of executor count based on CPU usage','Runtime query optimization that adjusts the plan based on actual statistics collected mid-execution','A replacement for the Spark UI','Automatic caching of frequently-read DataFrames'], ans:1 },
+  { topic:'Spark', q:'What is salting in the context of Spark data skew?', opts:['Encrypting partition data at rest','Adding a random suffix to skewed join keys so their data spreads across multiple partitions','A compression technique for skewed columns','Adding salt to shuffle sort buffers'], ans:1 },
+  { topic:'Spark', q:'What is predicate pushdown in Spark?', opts:['Pushing filter evaluation up to the driver','Filtering data as early as possible at the storage/source layer to minimize data read','Pushing computations to the edge nodes','Pre-sorting partition data'], ans:1 },
+  { topic:'Spark', q:'What does the Spark DAG represent?', opts:['The cluster topology','The sequence of transformations forming the logical and physical execution plan','A graph of executor connections','The Spark history server data'], ans:1 },
+  { topic:'Spark', q:'What is the advantage of a Pandas UDF (vectorized UDF) in PySpark over a standard UDF?', opts:['Pandas UDFs can access the SparkSession','Pandas UDFs use Apache Arrow for batch data transfer, making them 10-100× faster than row-at-a-time UDFs','Pandas UDFs can return multiple columns','Pandas UDFs are easier to debug'], ans:1 },
+  { topic:'Spark', q:'What is the Spark driver\'s role?', opts:['Stores RDD data and serves it to workers','Runs the user program, creates the DAG, and coordinates executor task assignment','Handles storage layer I/O','Compresses shuffle data'], ans:1 },
+
+  // ── PostgreSQL ──
+  { topic:'PostgreSQL', q:'What is MVCC in PostgreSQL?', opts:['Multi-Valued Column Compression for large arrays','Multi-Version Concurrency Control — readers don\'t block writers and vice versa','Maximum Value Cache Configuration for query plans','A replication consensus protocol'], ans:1 },
+  { topic:'PostgreSQL', q:'What is a GIN index best suited for in PostgreSQL?', opts:['Geospatial proximity queries','Ordering range queries on timestamp columns','Full-text search and indexing JSONB or array columns','Enforcing uniqueness constraints'], ans:2 },
+  { topic:'PostgreSQL', q:'What is the difference between `EXPLAIN` and `EXPLAIN ANALYZE`?', opts:['ANALYZE is always faster','EXPLAIN ANALYZE actually executes the query and shows real row counts and timings','They are identical','EXPLAIN is deprecated'], ans:1 },
+  { topic:'PostgreSQL', q:'Why does PostgreSQL need VACUUM?', opts:['To compress tables periodically','MVCC leaves behind dead tuple versions; VACUUM reclaims that space to prevent table bloat','To update column statistics for the planner','To check disk blocks for corruption'], ans:1 },
+  { topic:'PostgreSQL', q:'What is a partial index in PostgreSQL?', opts:['An index covering only some columns of a table','An incomplete index still being built','An index with a WHERE clause that only indexes a subset of rows matching the condition','A temporary index that expires'], ans:2 },
+  { topic:'PostgreSQL', q:'What is the key difference between JSONB and JSON storage in PostgreSQL?', opts:['JSONB supports more data types','JSONB stores data in binary form, is indexable, and faster to query; JSON stores as plain text','JSON is compressed on disk','They are identical in storage and performance'], ans:1 },
+  { topic:'PostgreSQL', q:'What is a recursive CTE (WITH RECURSIVE) used for?', opts:['A CTE that loops a fixed number of times','Traversing hierarchical or graph data (org charts, category trees) by referencing itself','A CTE with nested WITH clauses','A CTE that runs in parallel'], ans:1 },
+  { topic:'PostgreSQL', q:'What is TIMESTAMPTZ vs TIMESTAMP in PostgreSQL?', opts:['TIMESTAMPTZ is more precise (nanoseconds)','TIMESTAMPTZ stores UTC internally and converts to the session timezone on display; TIMESTAMP has no timezone info','They are identical internally','TIMESTAMP is deprecated in PostgreSQL 14+'], ans:1 },
+  { topic:'PostgreSQL', q:'What is table bloat in PostgreSQL?', opts:['Too many indexes on a table','Excessively large column values (TEXT/BYTEA)','Dead tuples accumulating because VACUUM hasn\'t reclaimed the space yet','Fragmented disk blocks from many small writes'], ans:2 },
+  { topic:'PostgreSQL', q:'What does autovacuum do in PostgreSQL?', opts:['A manual vacuum job you schedule with cron','A background daemon that automatically runs VACUUM and ANALYZE on tables with significant dead tuples','A storage optimizer that compacts indexes','An auto-compression process for large tables'], ans:1 },
+
+  // ── CI/CD ──
+  { topic:'CI/CD', q:'What is trunk-based development?', opts:['All developers maintain long-lived feature branches','Using multiple release branches simultaneously','All developers commit to the main branch frequently with very short-lived feature branches','A GitFlow variant for large teams'], ans:2 },
+  { topic:'CI/CD', q:'What is a blue/green deployment?', opts:['Gradual rollout to an increasing percentage of users','Two identical production environments — traffic is switched atomically from blue to green','Deploying to prod on blue days and staging on green days','A Docker networking colour convention'], ans:1 },
+  { topic:'CI/CD', q:'What is a canary deployment?', opts:['Deploying to non-production environments first','Rolling back a failed deployment','Routing a small percentage of traffic to the new version to catch issues before full rollout','A zero-downtime deployment using containers'], ans:2 },
+  { topic:'CI/CD', q:'What does a Jenkinsfile define?', opts:['Jenkins server configuration and plugins','Docker image build steps','The CI/CD pipeline stages as code, stored in version control','Build artifact storage locations'], ans:2 },
+  { topic:'CI/CD', q:'What is the difference between continuous delivery and continuous deployment?', opts:['Delivery requires more automation than deployment','Delivery auto-deploys to production; deployment needs a manual approval gate','Delivery auto-builds and tests but requires a manual deploy step; deployment auto-deploys to production','They are the same concept with different names'], ans:2 },
+  { topic:'CI/CD', q:'What does `git rebase` do vs `git merge`?', opts:['Rebase is safer for shared branches','Rebase replays commits for a linear history; merge creates a merge commit preserving branch history','They produce identical commit histories','Merge is always preferred over rebase'], ans:1 },
+  { topic:'CI/CD', q:'What is conventional commits format?', opts:['A Git hook naming convention','A branch naming standard used by GitFlow','A standardized commit message format (type(scope): description) that enables auto-changelogs','A PR review checklist format'], ans:2 },
+  { topic:'CI/CD', q:'What is a rolling deployment?', opts:['Deploy to a completely separate environment first','Replace all instances simultaneously with zero downtime','Gradually replace old instances with new ones while keeping the service available','A multi-region deployment strategy'], ans:2 },
+  { topic:'CI/CD', q:'What is Infrastructure as Code (IaC)?', opts:['Using code metrics to auto-scale infrastructure','Deploying application code to cloud infrastructure','Managing and provisioning infrastructure through version-controlled machine-readable config files','Monitoring infrastructure with code-based dashboards'], ans:2 },
+  { topic:'CI/CD', q:'What is semantic versioning (SemVer)?', opts:['A Git branching strategy for semantic features','MAJOR.MINOR.PATCH — breaking changes, new backward-compatible features, bug fixes','A release naming convention using date stamps','A changelog format used by GitHub'], ans:1 },
+
+  // ── Data Quality ──
+  { topic:'Data Quality', q:'What are the 6 standard dimensions of data quality?', opts:['Correctness, Format, Volume, Latency, Completeness, Security','Completeness, Accuracy, Consistency, Timeliness, Validity, Uniqueness','Freshness, Schema, Rows, Columns, Types, Values','Null rate, Duplicate rate, Outliers, Format, Freshness, Range'], ans:1 },
+  { topic:'Data Quality', q:'What is Great Expectations?', opts:['A CI/CD testing framework for data pipelines','A Python library for defining and running data validation rules (expectations) against datasets','A dbt extension for schema testing','A data profiling and lineage tool'], ans:1 },
+  { topic:'Data Quality', q:'What is a data contract?', opts:['A legal agreement about data ownership and GDPR compliance','A formal agreement between data producers and consumers on schema, quality, SLAs, and semantics','An encryption standard for data at rest','A data access control policy'], ans:1 },
+  { topic:'Data Quality', q:'What is a freshness check in data quality?', opts:['Checking that data contains no NULLs','Verifying that data was updated within the expected time window','Checking schema structure hasn\'t changed','Monitoring query execution time'], ans:1 },
+  { topic:'Data Quality', q:'What does the `not_null` test in dbt assert?', opts:['That the column is a primary key','That the column has a unique index','That no rows in the column contain a NULL value','That the column\'s data type is not nullable'], ans:2 },
+  { topic:'Data Quality', q:'What is data lineage?', opts:['Data ownership and access control documentation','Tracking the origin and transformation history of data as it flows through a system','Version control for datasets','Schema evolution documentation'], ans:1 },
+  { topic:'Data Quality', q:'What is a referential integrity check?', opts:['Checking that JOIN queries are written correctly','Verifying that every foreign key value in a child table exists in the parent table','Validating schema compatibility between systems','Checking for circular references in table joins'], ans:1 },
+  { topic:'Data Quality', q:'What is structured logging in a data pipeline?', opts:['Logging to a centralized database','Using log levels like INFO and ERROR consistently','Emitting logs in a consistent JSON or key-value format so they\'re machine-parseable and queryable','Storing logs in S3 with lifecycle policies'], ans:2 },
+  { topic:'Data Quality', q:'What does anomaly detection in data observability mean?', opts:['Finding SQL injection vulnerabilities in queries','Automatically flagging metrics (row counts, null rates, distributions) that fall outside expected patterns','Identifying schema mismatches between environments','Catching failed ETL tasks before they finish'], ans:1 },
+  { topic:'Data Quality', q:'What is the `accepted_values` test in dbt?', opts:['Checks that a column\'s values are not NULL','Checks that no duplicates exist','Asserts that all values in a column belong to a specified list of allowed values','Validates that values are within a numeric range'], ans:2 },
+
+  // ── Airflow ──
+  { topic:'Airflow', q:'What is a DAG in Apache Airflow?', opts:['A database storing Airflow metadata','A workflow defined as a Directed Acyclic Graph of tasks and their dependencies','An Airflow configuration file','A type of Airflow plugin'], ans:1 },
+  { topic:'Airflow', q:'What does setting `catchup=False` do in a DAG?', opts:['Disables retry logic for failed tasks','Prevents Airflow from automatically running all missed schedule intervals since start_date','Skips sensor polling checks','Disables manual DAG triggering'], ans:1 },
+  { topic:'Airflow', q:'What is an XCom in Airflow?', opts:['An external communication API connector','A cross-task communication mechanism for passing small values between tasks in a DAG run','A type of Airflow sensor operator','An Airflow plugin for Slack notifications'], ans:1 },
+  { topic:'Airflow', q:'What is the difference between poke and reschedule sensor mode?', opts:['Poke is faster; reschedule uses more memory','Reschedule mode is deprecated','Poke mode holds a worker slot while waiting; reschedule mode frees the slot between checks, better for long waits','They are identical in behavior'], ans:2 },
+  { topic:'Airflow', q:'What is an Airflow Connection?', opts:['A network connection between Airflow workers','Named stored credentials and endpoint configuration for external systems (databases, APIs, AWS)','A DAG dependency link','A task retry configuration'], ans:1 },
+  { topic:'Airflow', q:'What is dynamic task mapping in Airflow 2.3+?', opts:['Mapping task names to display IDs','Creating task instances dynamically at runtime based on upstream data output','Assigning tasks to specific Celery workers','Automatically parallelizing all tasks'], ans:1 },
+  { topic:'Airflow', q:'What executor should you use for running Airflow tasks across multiple machines at scale?', opts:['SequentialExecutor','LocalExecutor','CeleryExecutor or KubernetesExecutor','DebugExecutor'], ans:2 },
+  { topic:'Airflow', q:'What does `default_args` in a DAG definition configure?', opts:['Global Airflow server settings','Default task parameters (owner, retries, retry_delay, email_on_failure) applied to all tasks in the DAG','Database connection credentials','The DAG\'s execution schedule'], ans:1 },
+  { topic:'Airflow', q:'What is a TaskGroup in Airflow?', opts:['A set of tasks sharing the same schedule','Tasks that run with elevated permissions','A visual and logical grouping of related tasks in the Airflow UI, replacing SubDAGs','A parallel execution unit'], ans:2 },
+  { topic:'Airflow', q:'What is the Airflow metadata database used to store?', opts:['The actual pipeline data processed by tasks','DAG definitions, task instance states, XComs, connections, and run history','Cached results from previous runs','Airflow worker logs'], ans:1 },
+
+  // ── dbt ──
+  { topic:'dbt', q:'What is the difference between `ref()` and `source()` in dbt?', opts:['ref() is for views; source() is for tables','ref() references other dbt models; source() references raw/staging tables defined in sources.yml','They are fully interchangeable','source() is a deprecated alias for ref()'], ans:1 },
+  { topic:'dbt', q:'What are the four main dbt materialization types?', opts:['raw, silver, gold, final','table, view, stored_procedure, cache','table, view, incremental, ephemeral','full, partial, incremental, streaming'], ans:2 },
+  { topic:'dbt', q:'What does `is_incremental()` control in a dbt incremental model?', opts:['Whether the model creates a surrogate key','A Jinja condition that is true only during incremental runs, allowing you to filter only new records','Whether to create a unique index on the model','The batch size for loading rows'], ans:1 },
+  { topic:'dbt', q:'What does a dbt snapshot implement automatically?', opts:['Schema migration','SCD Type 2 — tracks row history by adding new rows with dbt_valid_from/dbt_valid_to timestamps','Full table refreshes on schedule','A CDC pipeline from source databases'], ans:1 },
+  { topic:'dbt', q:'What is a dbt seed?', opts:['An initial run that populates the warehouse from scratch','A CSV file in the project that gets loaded as a static reference table in the warehouse','A schema initialization script','A test fixture for unit testing models'], ans:1 },
+  { topic:'dbt', q:'What is a Jinja macro in dbt?', opts:['A Python function that dbt calls via an API','A reusable SQL-generating template function defined in the macros/ directory','An environment variable for dbt settings','A dbt model type for parameterized queries'], ans:1 },
+  { topic:'dbt', q:'What does `dbt docs generate && dbt docs serve` do?', opts:['Runs all dbt tests and shows results','Updates the project\'s README.md with model descriptions','Generates and serves an HTML documentation site with lineage DAG for the dbt project','Validates all model SQL for syntax errors'], ans:2 },
+  { topic:'dbt', q:'What is a dbt package?', opts:['A compiled dbt project artifact','A reusable dbt project (like dbt_utils) installed via packages.yml','A set of built-in generic tests','A macro library bundled with dbt core'], ans:1 },
+  { topic:'dbt', q:'What does the `relationships` test in dbt check?', opts:['That column values are not NULL','That no duplicates exist in the column','That every value in a column exists in a specified column of another model (referential integrity)','That column values match an accepted list'], ans:2 },
+  { topic:'dbt', q:'What is the purpose of `sources.yml` in a dbt project?', opts:['Stores database connection credentials','Declares raw source tables so they can be referenced with source() and tested for freshness','Defines model execution order and dependencies','Lists all external dbt packages'], ans:1 },
+
+  // ── Docker ──
+  { topic:'Docker', q:'What is the difference between a Docker image and a container?', opts:['Images are smaller than containers','Image: immutable layered blueprint; Container: a running instance of an image','Containers are stored on disk permanently','Images run code; containers store data'], ans:1 },
+  { topic:'Docker', q:'Why does the order of Dockerfile instructions matter for layer caching?', opts:['Later instructions run with higher OS privileges','Changing an early instruction invalidates all subsequent cached layers — frequently-changing steps should go last','The order affects image compression ratio','Later layers automatically override earlier ones'], ans:1 },
+  { topic:'Docker', q:'What is the primary benefit of a multi-stage Docker build?', opts:['Faster build times on CI servers','Final image contains only runtime artifacts, not build tools — resulting in a much smaller image','Simpler Dockerfile syntax','Better layer caching across builds'], ans:1 },
+  { topic:'Docker', q:'What is the difference between `CMD` and `ENTRYPOINT` in a Dockerfile?', opts:['CMD runs first, then ENTRYPOINT','ENTRYPOINT always runs; CMD provides default arguments that can be overridden at `docker run`','They are fully interchangeable','CMD is deprecated in favor of ENTRYPOINT'], ans:1 },
+  { topic:'Docker', q:'What is a named Docker volume vs a bind mount?', opts:['Named volumes are faster due to kernel optimizations','Named volume: managed by Docker, portable; Bind mount: maps a specific host filesystem path into the container','Bind mounts are more portable across machines','They are identical in behavior'], ans:1 },
+  { topic:'Docker', q:'What does `.dockerignore` do?', opts:['Ignores Docker daemon errors during build','Excludes specified files and directories from the build context, reducing image size and preventing secrets from leaking','Hides sensitive data inside the image layers','Skips container healthchecks'], ans:1 },
+  { topic:'Docker', q:'What does `docker stop` do vs `docker kill`?', opts:['stop removes the container; kill just pauses it','stop sends SIGTERM (graceful shutdown allowing cleanup); kill sends SIGKILL (immediate termination)','kill is the safer option for production','They are identical in behavior'], ans:1 },
+  { topic:'Docker', q:'What is Amazon ECR?', opts:['Amazon Elastic Compute Runtime','AWS managed Docker container image registry','A container runtime service replacing Docker','A container security vulnerability scanner'], ans:1 },
+  { topic:'Docker', q:'What is ECS Fargate?', opts:['A Docker image optimization service','A container orchestration service requiring EC2 management','Serverless container runtime — run containers without managing underlying EC2 instances','AWS\' replacement for Docker Compose'], ans:2 },
+  { topic:'Docker', q:'What is the HEALTHCHECK instruction in a Dockerfile?', opts:['Scans the image for known CVEs','Validates Dockerfile syntax','Defines a command Docker runs periodically to determine if the container is healthy','Monitors container resource usage'], ans:2 },
+
+  // ── Kafka ──
+  { topic:'Kafka', q:'What fundamentally distinguishes Kafka from a traditional message queue?', opts:['Kafka is significantly faster','Kafka retains messages for a configurable retention period; queues delete messages after consumption','Kafka requires no consumers','Kafka uses a push model exclusively'], ans:1 },
+  { topic:'Kafka', q:'What determines the maximum parallelism for a consumer group reading a topic?', opts:['The number of brokers in the cluster','The replication factor of the topic','The number of partitions — there can be at most one active consumer per partition in a group','Available consumer RAM'], ans:2 },
+  { topic:'Kafka', q:'What does producer config `acks=all` guarantee?', opts:['All consumer groups have received the message','All in-sync replicas have acknowledged the write before success is returned to the producer','All brokers in the cluster acknowledge','Only the partition leader acknowledges'], ans:1 },
+  { topic:'Kafka', q:'What is a Kafka offset?', opts:['The lag between producer write rate and consumer read rate','A sequential numeric position identifying a message within a specific partition','The partition assignment for a consumer group member','The message\'s write timestamp in Unix epoch'], ans:1 },
+  { topic:'Kafka', q:'What is the Kafka Schema Registry?', opts:['Kafka\'s internal ZooKeeper metadata store','A service that stores and enforces Avro/Protobuf/JSON schemas for Kafka topics','A Kafka Connect configuration registry','ZooKeeper\'s schema cache for brokers'], ans:1 },
+  { topic:'Kafka', q:'What is Debezium?', opts:['A Kafka cluster monitoring tool','A schema migration framework','A CDC connector that reads database transaction logs and publishes change events to Kafka','A Kafka consumer client library'], ans:2 },
+  { topic:'Kafka', q:'What does `enable.idempotence=true` on a Kafka producer guarantee?', opts:['Compressed messages on all topics','No duplicate messages written to a partition even if the producer retries','Ordered delivery across all partitions','Automatic schema validation'], ans:1 },
+  { topic:'Kafka', q:'How does Kafka guarantee message ordering?', opts:['By global timestamp ordering across all topics','Messages are strictly ordered within a partition; there is no ordering guarantee across partitions','Through round-robin partition assignment','Via the Schema Registry sequence numbers'], ans:1 },
+  { topic:'Kafka', q:'What is `min.insync.replicas` in Kafka?', opts:['Minimum consumer count per topic','Minimum number of in-sync replicas that must acknowledge a write for it to succeed','Minimum partition count per broker','Minimum broker count for the cluster'], ans:1 },
+  { topic:'Kafka', q:'What is a Kafka Connect sink connector?', opts:['A connector that ingests external data into Kafka','A connector that reads from Kafka topics and writes to an external system (S3, database, Elasticsearch)','A component that routes messages between topics','A consumer lag monitoring tool'], ans:1 },
+  { topic:'Kafka', q:'What is the difference between Kafka and AWS Kinesis?', opts:['Kinesis is open-source; Kafka is proprietary','Kinesis is faster for all use cases','Kafka is self-managed with more control and flexibility; Kinesis is fully managed AWS-native','They use completely different messaging protocols'], ans:2 },
+  { topic:'Kafka', q:'What happens to messages in Kafka after a consumer reads them?', opts:['They are deleted immediately','They are moved to a dead letter queue','They are retained until the configured retention period expires (default 7 days)','They are archived to S3 automatically'], ans:2 },
+
+  // ── Terraform ──
+  { topic:'Terraform', q:'What is the primary value of `terraform plan`?', opts:['Creates the infrastructure resources','Shows exactly what will change before any resources are modified — a diff for infrastructure','Validates HCL syntax only','Auto-generates documentation'], ans:1 },
+  { topic:'Terraform', q:'Why store Terraform state in S3 backed by DynamoDB?', opts:['For faster state read performance','AWS requires this for compliance','S3 persists the state file remotely; DynamoDB provides locking to prevent concurrent apply corruption','To enable state encryption at rest'], ans:2 },
+  { topic:'Terraform', q:'What is the key advantage of `for_each` over `count` in Terraform?', opts:['for_each supports more resource types','for_each uses stable map/set keys; count uses fragile numeric indexes that shift when items are deleted','for_each is always faster','count is deprecated in Terraform 1.0+'], ans:1 },
+  { topic:'Terraform', q:'What does `terraform import` do?', opts:['Downloads provider plugins and modules','Imports an existing cloud resource into Terraform state management without recreating it','Reads remote state from S3','Imports variable values from a .tfvars file'], ans:1 },
+  { topic:'Terraform', q:'What is a Terraform module?', opts:['A Terraform provider plugin','A workspace for environment isolation','A reusable group of resources with input variables and output values, organized as a directory','The Terraform state file'], ans:2 },
+  { topic:'Terraform', q:'What does `sensitive = true` on a Terraform variable do?', opts:['Encrypts the variable value using AWS KMS','Stores the value in AWS Secrets Manager','Redacts the value from plan/apply output — but it is still stored in plain text in the state file','Prevents the variable from being passed to child modules'], ans:2 },
+  { topic:'Terraform', q:'What is a Terraform data source?', opts:['A variable with an externally-provided default value','A read-only reference to existing infrastructure not managed by the current Terraform config','A remote backend module','An output value from a child module'], ans:1 },
+  { topic:'Terraform', q:'What is catastrophic about losing the Terraform state file?', opts:['All Terraform variables are reset','Terraform no longer knows what infrastructure it manages and cannot safely update or destroy resources','The provider plugins must be reinstalled','The HCL configuration files are corrupted'], ans:1 },
+  { topic:'Terraform', q:'What does `deletion_protection` on a Terraform resource (e.g., RDS) prevent?', opts:['Terraform plan from showing changes','Other team members from modifying the resource','Accidental destruction of the resource via `terraform destroy`','Resource auto-scaling'], ans:2 },
+  { topic:'Terraform', q:'What is a Terraform workspace?', opts:['A directory containing Terraform configuration files','A named isolated state environment (e.g., dev, staging, prod) within the same configuration','A remote module registry','A CI/CD pipeline for Terraform'], ans:1 },
+
+  // ── Modern Stack ──
+  { topic:'Modern Stack', q:'What does Delta Lake add on top of a standard data lake?', opts:['Faster S3 upload speeds via multi-part API','ACID transactions, time travel, schema enforcement, and upsert (MERGE) support on data lake files','Automatic data compression to Snappy','Serverless query execution similar to Athena'], ans:1 },
+  { topic:'Modern Stack', q:'What is Z-ORDER in Delta Lake?', opts:['Orders partitions alphabetically for faster listing','A compression algorithm for Parquet files','Co-locates related data in the same files to improve data skipping for multi-column filter queries','Sorts data within partitions by a primary key'], ans:2 },
+  { topic:'Modern Stack', q:'What command cleans up old files no longer referenced by the Delta Lake transaction log?', opts:['CLEAN','PURGE','COMPACT','VACUUM'], ans:3 },
+  { topic:'Modern Stack', q:'What is Apache Iceberg\'s "hidden partitioning"?', opts:['Encrypted partitions not visible to end users','Partitions managed transparently by Iceberg — queries don\'t need to filter on partition columns explicitly','Partitions excluded from table metadata','Auto-generated composite partition keys'], ans:1 },
+  { topic:'Modern Stack', q:'What problem does a feature store solve in ML systems?', opts:['Automates feature engineering with ML','Stores model weights and hyperparameters','Solves train/serve skew — ensures the same feature logic and values are used in both training and production serving','Manages model version deployment'], ans:2 },
+  { topic:'Modern Stack', q:'What is RAG (Retrieval-Augmented Generation)?', opts:['A reinforcement learning optimization technique','Augmenting LLM prompts with relevant documents retrieved from a knowledge base before generating a response','A model fine-tuning approach using ranked data','An API rate-limiting strategy for LLM calls'], ans:1 },
+  { topic:'Modern Stack', q:'What is a vector database optimized for?', opts:['Storing time-series metrics at high write throughput','Storing and querying high-dimensional embedding vectors by approximate nearest-neighbor similarity','Column-oriented analytical queries','Graph traversal queries'], ans:1 },
+  { topic:'Modern Stack', q:'What is Reverse ETL?', opts:['Running the ETL pipeline in reverse for data rollbacks','Moving curated data from the data warehouse back into operational tools like CRMs and ad platforms','An alternative ETL architecture where T comes before E','Decoupling transformation from extraction'], ans:1 },
+  { topic:'Modern Stack', q:'What is the key architectural difference between Delta Lake and Apache Iceberg?', opts:['Delta Lake is open-source; Iceberg is proprietary','Delta uses a _delta_log of JSON/checkpoint files; Iceberg uses a metadata tree with manifest and manifest-list files','They have identical architectures under the hood','Iceberg is significantly faster for all operations'], ans:1 },
+  { topic:'Modern Stack', q:'What is the embedding consistency requirement in RAG systems?', opts:['Embeddings must be computed on a GPU','The same embedding model must be used for both indexing documents and encoding queries — different models produce incompatible vector spaces','Embeddings must be normalized to unit vectors','Embeddings must be stored in a relational database'], ans:1 },
+  { topic:'Modern Stack', q:'What is Fivetran / Airbyte used for in a modern data stack?', opts:['SQL transformations inside the warehouse','Workflow orchestration replacing Airflow','Automated data ingestion from SaaS and operational sources (Salesforce, Stripe, Postgres) into the warehouse','Data quality monitoring and alerting'], ans:2 },
+  { topic:'Modern Stack', q:'What does the HNSW algorithm provide in vector databases?', opts:['Exact nearest-neighbor search with guaranteed results','A data compression algorithm for embedding vectors','Approximate nearest-neighbor search with sub-linear query time by building a hierarchical graph','A hashing scheme for bucketing similar vectors'], ans:2 },
+];
+
+let quizState = { questions: [], current: 0, score: 0, wrongs: [], active: false };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showQuiz() {
+  currentIndex = -1;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('quiz-nav-btn').classList.add('active');
+  document.getElementById('top-bar-title').textContent = '🎯  Mock Quiz';
+  document.getElementById('top-bar-meta').textContent = '';
+  document.getElementById('btn-prev').disabled = true;
+  document.getElementById('btn-next').disabled = true;
+  document.getElementById('main').scrollTo(0, 0);
+
+  const topics = ['All Topics', ...new Set(quizData.map(q => q.topic))];
+  const topicOpts = topics.map(t => `<option value="${t}">${t}</option>`).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div id="quiz-page">
+      <div class="quiz-page-title">Mock Quiz</div>
+      <p class="quiz-page-sub">${quizData.length} questions across 16 topics · shuffled every time</p>
+      <div class="quiz-start-card">
+        <h3>Configure your session</h3>
+        <div class="quiz-filter-row">
+          <span class="quiz-filter-label">Topic:</span>
+          <select class="quiz-select" id="quiz-topic-sel">${topicOpts}</select>
+          <span class="quiz-filter-label">Questions:</span>
+          <select class="quiz-select" id="quiz-count-sel">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="50" selected>50</option>
+            <option value="9999">All</option>
+          </select>
+        </div>
+        <button class="btn-start-quiz" onclick="startQuiz()">Start Quiz →</button>
+      </div>
+    </div>
+  `;
+}
+
+function startQuiz() {
+  const topic = document.getElementById('quiz-topic-sel').value;
+  const countVal = parseInt(document.getElementById('quiz-count-sel').value);
+  let pool = topic === 'All Topics' ? quizData : quizData.filter(q => q.topic === topic);
+  pool = shuffle(pool).slice(0, Math.min(countVal, pool.length));
+  quizState = { questions: pool, current: 0, score: 0, wrongs: [], active: true };
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const { questions, current } = quizState;
+  if (current >= questions.length) { renderQuizResult(); return; }
+  const q = questions[current];
+  const pct = Math.round((current / questions.length) * 100);
+  const letters = ['A', 'B', 'C', 'D'];
+  const shuffledOpts = shuffle(q.opts.map((o, i) => ({ text: o, orig: i })));
+  quizState.shuffledOpts = shuffledOpts;
+
+  document.getElementById('page-content').innerHTML = `
+    <div id="quiz-page">
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+        <div class="quiz-progress-text"><span>Question ${current + 1} of ${questions.length}</span><span>${quizState.score} correct</span></div>
+      </div>
+      <span class="quiz-topic-badge">${q.topic}</span>
+      <div class="quiz-question-card">
+        <div class="quiz-q-text">${q.q}</div>
+        <div class="quiz-options" id="quiz-opts">
+          ${shuffledOpts.map((o, i) => `
+            <button class="quiz-opt" data-orig="${o.orig}" onclick="selectOpt(this)">
+              <span class="quiz-opt-letter">${letters[i]}</span>
+              <span>${o.text}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+      <div class="quiz-action-row">
+        <button class="btn-quiz-next" id="quiz-next-btn" disabled onclick="nextQuestion()">Next →</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('main').scrollTo(0, 0);
+}
+
+function selectOpt(el) {
+  if (el.classList.contains('locked')) return;
+  const q = quizState.questions[quizState.current];
+  const chosen = parseInt(el.dataset.orig);
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('locked'));
+  if (chosen === q.ans) {
+    el.classList.add('correct');
+    quizState.score++;
+  } else {
+    el.classList.add('wrong');
+    document.querySelectorAll('.quiz-opt').forEach(o => {
+      if (parseInt(o.dataset.orig) === q.ans) o.classList.add('correct');
+    });
+    quizState.wrongs.push({ q: q.q, topic: q.topic, chosen: q.opts[chosen], correct: q.opts[q.ans] });
+  }
+  document.getElementById('quiz-next-btn').disabled = false;
+}
+
+function nextQuestion() {
+  quizState.current++;
+  renderQuizQuestion();
+}
+
+function renderQuizResult() {
+  const { score, questions, wrongs } = quizState;
+  const pct = Math.round((score / questions.length) * 100);
+  const color = pct >= 80 ? '#3fb950' : pct >= 60 ? '#e3b341' : '#f85149';
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📚';
+  const wrongsHtml = wrongs.length === 0
+    ? '<p style="color:var(--text-muted);font-size:14px;">Perfect score — no wrong answers!</p>'
+    : wrongs.map(w => `
+        <div class="quiz-review-item">
+          <div style="margin-bottom:6px;"><span class="quiz-topic-badge">${w.topic}</span></div>
+          <div class="quiz-review-q">${w.q}</div>
+          <div class="quiz-review-your">✗ Your answer: ${w.chosen}</div>
+          <div class="quiz-review-ans">✓ Correct: ${w.correct}</div>
+        </div>
+      `).join('');
+
+  document.getElementById('page-content').innerHTML = `
+    <div id="quiz-page">
+      <div class="quiz-result-card">
+        <div class="quiz-score-big" style="color:${color}">${pct}%</div>
+        <div class="quiz-score-label">${emoji} ${score} / ${questions.length} correct</div>
+        <div class="quiz-stats-row">
+          <div class="quiz-stat"><div class="quiz-stat-num" style="color:#3fb950">${score}</div><div class="quiz-stat-lbl">Correct</div></div>
+          <div class="quiz-stat"><div class="quiz-stat-num" style="color:#f85149">${wrongs.length}</div><div class="quiz-stat-lbl">Wrong</div></div>
+          <div class="quiz-stat"><div class="quiz-stat-num" style="color:var(--accent)">${pct}%</div><div class="quiz-stat-lbl">Score</div></div>
+        </div>
+        <div class="quiz-result-btns">
+          <button class="btn-retry" onclick="showQuiz()">New Quiz</button>
+          ${wrongs.length > 0 ? `<button class="btn-review-wrong" onclick="toggleReview()">Review Wrong (${wrongs.length})</button>` : ''}
+        </div>
+        <div class="quiz-review-section" id="quiz-review" style="display:none">
+          <h4>Missed Questions</h4>
+          ${wrongsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('main').scrollTo(0, 0);
+}
+
+function toggleReview() {
+  const r = document.getElementById('quiz-review');
+  r.style.display = r.style.display === 'none' ? 'block' : 'none';
+}
 
 showHome();
 </script>

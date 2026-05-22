@@ -53,7 +53,6 @@
       z-index: 100;
     }
 
-    /* Body modifier to collapse sidebar on PC */
     body.sidebar-collapsed #sidebar {
       margin-left: calc(-1 * var(--sidebar-width));
     }
@@ -143,13 +142,8 @@
       justify-content: space-between;
     }
 
-    #top-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    #top-bar-left { display: flex; align-items: center; gap: 14px; }
 
-    /* Modern Toggle Button Appearance */
     .menu-toggle-btn {
       background: transparent;
       border: 1px solid var(--border);
@@ -163,18 +157,8 @@
       cursor: pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    .menu-toggle-btn:hover {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      border-color: var(--accent);
-    }
-    .menu-toggle-btn svg {
-      width: 16px;
-      height: 16px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-    }
+    .menu-toggle-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); border-color: var(--accent); }
+    .menu-toggle-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
 
     #top-bar-title { font-size: 14px; font-weight: 600; color: var(--heading-color); }
     #top-bar-meta { font-size: 12px; color: var(--text-muted); }
@@ -186,46 +170,23 @@
       margin: 0 auto;
     }
 
-    /* ── HOME ── */
+    /* ── HOME & ABOUT SPLIT ── */
     #home { padding: 48px 40px 80px; max-width: 860px; margin: 0 auto; }
-    #home h2 { font-size: 28px; font-weight: 700; color: var(--heading-color); letter-spacing: -0.5px; margin-bottom: 8px; }
+    #home h2 { font-size: 28px; font-weight: 700; color: var(--heading-color); letter-spacing: -0.5px; margin-bottom: 6px; }
     #home p.subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 36px; }
 
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 14px;
-    }
-
-    .card {
+    .about-section {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px;
-      cursor: pointer;
-      transition: border-color .15s, transform .12s, box-shadow .15s;
-      display: flex;
-      flex-direction: column;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 12px;
     }
-    .card:hover {
-      border-color: var(--hover-border, var(--accent));
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.5);
-    }
-    .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .card-icon {
-      font-size: 22px; width: 38px; height: 38px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .card-title { font-size: 14px; font-weight: 700; color: var(--heading-color); }
-    .card-num { font-size: 11px; color: var(--text-muted); }
-    .card-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
-    .card-topics { display: flex; flex-wrap: wrap; gap: 5px; }
-    .topic-tag {
-      font-size: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px; padding: 2px 7px; color: var(--text-muted); white-space: nowrap;
-    }
-    .card:hover .topic-tag { background: rgba(255,255,255,0.08); color: var(--text); }
+    .about-section h3 { font-size: 18px; color: var(--accent-hover); margin-bottom: 12px; font-weight: 600; }
+    .about-section p { color: var(--text); font-size: 14.5px; line-height: 1.7; margin-bottom: 14px; }
+    .about-section ul { margin-left: 20px; margin-bottom: 14px; line-height: 1.8; color: var(--text); font-size: 14.5px; }
+    .about-section li { margin-bottom: 4px; }
+    .about-section blockquote { border-left: 3px solid var(--accent); margin: 16px 0; padding: 10px 16px; background: rgba(88,166,255,0.04); border-radius: 0 6px 6px 0; color: var(--text-muted); font-size: 14px; }
 
     /* ── MOBILE OVERLAY SHADE ── */
     #sidebar-overlay {
@@ -237,7 +198,7 @@
       z-index: 90;
     }
 
-    /* ── MARKDOWN CORE STYLES ── */
+    /* ── MARKDOWN Core Styles ── */
     #content-wrapper h1 { font-size: 28px; font-weight: 700; color: var(--heading-color); border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 24px; letter-spacing: -0.5px; }
     #content-wrapper h2 { font-size: 20px; font-weight: 600; color: var(--heading-color); margin: 36px 0 14px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
     #content-wrapper h3 { font-size: 16px; font-weight: 600; color: var(--accent-hover); margin: 24px 0 10px; }
@@ -264,43 +225,21 @@
     .arrow-btn:disabled { opacity: 0.3; cursor: default; }
     .nav-item.hidden { display: none; }
 
-    /* ── HARDCORE RESPONSIVE MEDIA QUERIES ── */
     @media (max-width: 768px) {
-      #sidebar {
-        position: fixed;
-        left: 0; top: 0; bottom: 0;
-        transform: translateX(-100%);
-        margin-left: 0 !important; /* Force cancel desktop rules */
-      }
-      
-      /* Open state on mobile triggers active overlay and updates coordinate map */
-      body.sidebar-open #sidebar {
-        transform: translateX(0);
-      }
-
-      body.sidebar-open #sidebar-overlay {
-        display: block;
-      }
-
-      body.sidebar-collapsed #sidebar {
-        margin-left: 0; /* Keep baseline clean */
-      }
-
+      #sidebar { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-100%); margin-left: 0 !important; }
+      body.sidebar-open #sidebar { transform: translateX(0); }
+      body.sidebar-open #sidebar-overlay { display: block; }
+      body.sidebar-collapsed #sidebar { margin-left: 0; }
       #top-bar { padding: 12px 16px; }
       #content-wrapper { padding: 24px 16px 60px; }
       #home { padding: 32px 16px 60px; }
       #home h2 { font-size: 24px; }
       #home p.subtitle { margin-bottom: 24px; font-size: 14px; }
-      
-      .cards-grid {
-        grid-template-columns: 1fr; /* Stack cards cleanly single-column on tiny touch views */
-      }
     }
   </style>
 </head>
 <body>
 
-<!-- Backdrop layer for tap-to-close security on mobile -->
 <div id="sidebar-overlay"></div>
 
 <nav id="sidebar">
@@ -318,7 +257,6 @@
 <main id="main">
   <div id="top-bar">
     <div id="top-bar-left">
-      <!-- Universal open/close toggle trigger button -->
       <button class="menu-toggle-btn" id="sidebar-toggle" title="Toggle Sidebar (Shortcut: \)">
         <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
@@ -337,108 +275,27 @@
 
 <script>
 const notes = [
-  {
-    id: '01', file: 'notes/01_python.md', title: 'Python', icon: '🐍',
-    sub: 'Core language + DE-specific libraries',
-    topics: ['Variables, types, strings, lists, dicts', 'List/dict comprehensions, lambda, map/filter', 'OOP — classes, inheritance, polymorphism', 'Decorators, generators, context managers', 'pandas — groupby, merge, pivot, apply', 'pytest — fixtures, mocking, parametrize'],
-    color: '#3b7dd8'
-  },
-  {
-    id: '02', file: 'notes/02_sql.md', title: 'SQL', icon: '🗄️',
-    sub: 'From basics to advanced query optimisation',
-    topics: ['SELECT, JOINs (inner/left/right/full/cross)', 'CTEs, subqueries, CASE statements', 'Window functions — ROW_NUMBER, LAG, LEAD, RANK', 'Aggregates, GROUP BY, HAVING', 'Indexes, EXPLAIN, query optimisation', 'Transactions, ACID, isolation levels'],
-    color: '#e36209'
-  },
-  {
-    id: '03', file: 'notes/03_data_modeling.md', title: 'Data Modeling', icon: '🏗️',
-    sub: 'Dimensional modeling & modern patterns',
-    topics: ['Entities, keys, cardinality, ER diagrams', '1NF / 2NF / 3NF normalisation', 'Fact tables vs dimension tables', 'Star schema vs Snowflake schema', 'SCD Type 1, 2, 3, 4, 6', 'Medallion architecture · Data Vault'],
-    color: '#6f42c1'
-  },
-  {
-    id: '04', file: 'notes/04_data_warehousing.md', title: 'Data Warehousing', icon: '🏢',
-    sub: 'Redshift & Snowflake — deep dive',
-    topics: ['OLTP vs OLAP, columnar storage', 'Redshift: dist keys, sort keys, VACUUM', 'Redshift: COPY, Spectrum, WLM', 'Snowflake: virtual warehouses, multi-cluster', 'Snowflake: zero-copy clone, time travel', 'Snowpipe, stages, query optimisation'],
-    color: '#1f6feb'
-  },
-  {
-    id: '05', file: 'notes/05_aws.md', title: 'AWS Core Services', icon: '☁️',
-    sub: 'The full DE toolkit on AWS',
-    topics: ['IAM — users, roles, policies, least privilege', 'S3 — storage classes, lifecycle, partitioning', 'AWS Glue — Data Catalog, crawlers, ETL jobs', 'Lambda — handlers, cold starts, concurrency', 'Athena — serverless SQL on S3, cost tips', 'Step Functions, EventBridge, RDS'],
-    color: '#f78166'
-  },
-  {
-    id: '06', file: 'notes/06_etl_pipelines.md', title: 'ETL Pipelines', icon: '🔄',
-    sub: 'Pipeline design, file formats & patterns',
-    topics: ['ETL vs ELT — when to use which', 'Full load vs incremental vs CDC', 'Idempotency — safe to re-run patterns', 'At-least-once / exactly-once semantics', 'Parquet vs ORC vs Avro vs CSV', 'Late data, schema evolution, checkpointing'],
-    color: '#3fb950'
-  },
-  {
-    id: '07', file: 'notes/07_spark_pyspark.md', title: 'Spark & PySpark', icon: '⚡',
-    sub: 'Architecture, DataFrames & performance',
-    topics: ['Driver, executors, DAG, lazy evaluation', 'DataFrames — select, filter, join, agg', 'Window functions, UDFs, pandas UDFs', 'Broadcast joins, shuffle, repartition', 'Data skew — salting, AQE, skew hints', 'Caching, Spark UI, predicate pushdown'],
-    color: '#e3b341'
-  },
-  {
-    id: '08', file: 'notes/08_postgresql.md', title: 'PostgreSQL', icon: '🐘',
-    sub: 'Advanced features for data engineers',
-    topics: ['Data types — TIMESTAMPTZ, JSONB, arrays', 'Indexes — B-tree, GIN, GiST, partial', 'EXPLAIN ANALYZE — reading query plans', 'VACUUM, autovacuum, table bloat', 'Range / list / hash partitioning', 'Recursive CTEs, stored procedures, triggers'],
-    color: '#388bfd'
-  },
-  {
-    id: '09', file: 'notes/09_cicd_devops.md', title: 'CI/CD & DevOps', icon: '🚀',
-    sub: 'Git, Jenkins, pipelines & IaC',
-    topics: ['Git — branching, rebase, conventional commits', 'GitFlow vs trunk-based development', 'Jenkinsfile — stages, parallel, credentials', 'CI/CD concepts — delivery vs deployment', 'Blue/green, canary, rolling deployments', 'GitHub Actions, CloudFormation, Terraform basics'],
-    color: '#f0883e'
-  },
-  {
-    id: '10', file: 'notes/10_data_quality.md', title: 'Data Quality', icon: '✅',
-    sub: 'Validation, observability & contracts',
-    topics: ['6 dimensions: completeness, accuracy…', 'SQL checks — nulls, ranges, freshness, FK', 'Great Expectations — suites, checkpoints', 'dbt tests — not_null, unique, relationships', 'Data contracts — schema + SLA agreements', 'Structured logging, CloudWatch metrics, lineage'],
-    color: '#56d364'
-  },
-  {
-    id: '11', file: 'notes/11_airflow.md', title: 'Apache Airflow', icon: '💨',
-    sub: 'Orchestration from DAGs to production',
-    topics: ['Architecture — scheduler, executor, webserver', 'DAG definition, default_args, schedule', 'Operators — Python, Bash, Glue, Redshift', 'Sensors — S3, ExternalTask (poke vs reschedule)', 'XComs, Variables, Connections, Hooks', 'TaskGroups, branching, dynamic task mapping'],
-    color: '#79c0ff'
-  },
-  {
-    id: '12', file: 'notes/12_dbt.md', title: 'dbt', icon: '🔧',
-    sub: 'SQL transformations as version-controlled code',
-    topics: ['Project structure — models, seeds, snapshots', 'ref() vs source(), materialisation types', 'Incremental models — is_incremental(), merge', 'Snapshots — automatic SCD Type 2', 'Schema tests + custom SQL tests', 'Jinja templating, macros, packages, dbt docs'],
-    color: '#ff7b72'
-  },
-  {
-    id: '13', file: 'notes/13_docker.md', title: 'Docker', icon: '🐳',
-    sub: 'Containers for reproducible DE workloads',
-    topics: ['Containers vs VMs — key differences', 'Dockerfile — FROM, RUN, COPY, CMD, USER', 'Layer caching, multi-stage builds', 'docker-compose — multi-container apps', 'Volumes — named vs bind mounts', 'ECR, ECS Fargate, security best practices'],
-    color: '#1f6feb'
-  },
-  {
-    id: '14', file: 'notes/14_kafka.md', title: 'Kafka & Streaming', icon: '📨',
-    sub: 'Event streaming at scale',
-    topics: ['Brokers, topics, partitions, offsets', 'Producers — acks, idempotence, compression', 'Consumers — groups, offsets, rebalance', 'Schema Registry + Avro serialisation', 'Kafka Connect — Debezium CDC, S3 sink', 'Spark Structured Streaming + Kinesis comparison'],
-    color: '#d29922'
-  },
-  {
-    id: '15', file: 'notes/15_terraform.md', title: 'Terraform', icon: '🏔️',
-    sub: 'Infrastructure as code for data platforms',
-    topics: ['HCL syntax — resources, variables, outputs', 'terraform init / plan / apply / destroy', 'Remote state — S3 + DynamoDB locking', 'Data sources, locals, count vs for_each', 'Modules — reusable across environments', 'AWS data platform: S3, Glue, IAM, RDS'],
-    color: '#7948d4'
-  },
-  {
-    id: '16', file: 'notes/16_modern_stack.md', title: 'Modern Stack & AI', icon: '🤖',
-    sub: 'Delta Lake, Iceberg, RAG & ML pipelines',
-    topics: ['Delta Lake — ACID, time travel, Z-ORDER', 'Apache Iceberg — hidden partitions, multi-engine', 'Delta vs Iceberg vs Hudi comparison', 'Fivetran / Airbyte, reverse ETL', 'Feature stores, vector databases, embeddings', 'RAG pattern — LangChain, pgvector, Pinecone'],
-    color: '#3fb950'
-  },
+  { id: '01', file: 'notes/01_python.md', title: 'Python', icon: '🐍' },
+  { id: '02', file: 'notes/02_sql.md', title: 'SQL', icon: '🗄️' },
+  { id: '03', file: 'notes/03_data_modeling.md', title: 'Data Modeling', icon: '🏗️' },
+  { id: '04', file: 'notes/04_data_warehousing.md', title: 'Data Warehousing', icon: '🏢' },
+  { id: '05', file: 'notes/05_aws.md', title: 'AWS Core Services', icon: '☁️' },
+  { id: '06', file: 'notes/06_etl_pipelines.md', title: 'ETL Pipelines', icon: '🔄' },
+  { id: '07', file: 'notes/07_spark_pyspark.md', title: 'Spark & PySpark', icon: '⚡' },
+  { id: '08', file: 'notes/08_postgresql.md', title: 'PostgreSQL', icon: '🐘' },
+  { id: '09', file: 'notes/09_cicd_devops.md', title: 'CI/CD & DevOps', icon: '🚀' },
+  { id: '10', file: 'notes/10_data_quality.md', title: 'Data Quality', icon: '✅' },
+  { id: '11', file: 'notes/11_airflow.md', title: 'Apache Airflow', icon: '💨' },
+  { id: '12', file: 'notes/12_dbt.md', title: 'dbt', icon: '🔧' },
+  { id: '13', file: 'notes/13_docker.md', title: 'Docker', icon: '🐳' },
+  { id: '14', file: 'notes/14_kafka.md', title: 'Kafka & Streaming', icon: '📨' },
+  { id: '15', file: 'notes/15_terraform.md', title: 'Terraform', icon: '🏔️' },
+  { id: '16', file: 'notes/16_modern_stack.md', title: 'Modern Stack & AI', icon: '🤖' }
 ];
 
 let currentIndex = -1; 
 const cache = {};
 
-// Build sidebar nav links
 const navList = document.getElementById('nav-list');
 notes.forEach((note, i) => {
   const el = document.createElement('div');
@@ -451,12 +308,11 @@ notes.forEach((note, i) => {
   `;
   el.addEventListener('click', () => {
     loadNote(i);
-    closeMobileSidebar(); // Auto-collapse if reading on a phone screen
+    closeMobileSidebar();
   });
   navList.appendChild(el);
 });
 
-// Search filters
 document.getElementById('search').addEventListener('input', e => {
   const q = e.target.value.toLowerCase();
   document.querySelectorAll('.nav-item').forEach(el => {
@@ -476,7 +332,6 @@ marked.setOptions({
   gfm: true,
 });
 
-// Sidebar Open/Close Toggle Control Functions
 function toggleSidebar() {
   if (window.innerWidth <= 768) {
     document.body.classList.toggle('sidebar-open');
@@ -489,7 +344,6 @@ function closeMobileSidebar() {
   document.body.classList.remove('sidebar-open');
 }
 
-// Event Listeners for layouts
 document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
 
@@ -546,11 +400,8 @@ document.getElementById('btn-next').addEventListener('click', () => {
   if (currentIndex < notes.length - 1) loadNote(currentIndex + 1);
 });
 
-// Advanced hotkeys and accessibility mapping
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
-  
-  // Press the Backslash Key \ to snap close/open side panel instantly
   if (e.key === '\\') {
     e.preventDefault();
     toggleSidebar();
@@ -572,45 +423,51 @@ function showHome() {
   document.getElementById('btn-next').disabled = true;
   document.getElementById('main').scrollTo(0, 0);
 
-  const cards = notes.map((n, i) => `
-    <div class="card" onclick="loadNote(${i}); closeMobileSidebar();" style="border-top: 3px solid ${n.color}22; --hover-border: ${n.color};">
-      <div class="card-top">
-        <div class="card-icon" style="background:${n.color}18;">${n.icon}</div>
-        <div>
-          <div class="card-num">Topic ${n.id}</div>
-          <div class="card-title">${n.title}</div>
-        </div>
-      </div>
-      <div class="card-sub">${n.sub}</div>
-      <div class="card-topics">
-        ${n.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
-      </div>
-    </div>
-  `).join('');
-
   document.getElementById('page-content').innerHTML = `
     <div id="home">
       <h2>Data Engineer Study Notes</h2>
-      <p class="subtitle">16 topics · everything from scratch · click any card to dive in</p>
+      <p class="subtitle">Comprehensive reference engineering guides built from scratch.</p>
+      
+      <!-- Metrics Row -->
       <div style="display:flex;gap:24px;margin-bottom:32px;flex-wrap:wrap;">
-        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;">
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
           <div style="font-size:26px;font-weight:700;color:var(--accent);">16</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Topics covered</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Topics Covered</div>
         </div>
-        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;">
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
           <div style="font-size:26px;font-weight:700;color:#3fb950;">96</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Key concepts</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Core Concepts</div>
         </div>
-        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;">
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
           <div style="font-size:26px;font-weight:700;color:#e3b341;">~200KB</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Notes content</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Notes Content</div>
         </div>
-        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;">
-          <div style="font-size:26px;font-weight:700;color:#ff7b72;">AWS</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Certified DE focus</div>
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 20px;min-width:140px;flex:1;">
+          <div style="font-size:26px;font-weight:700;color:#ff7b72;">AWS Focus</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Interview Ready</div>
         </div>
       </div>
-      <div class="cards-grid">${cards}</div>
+
+      <!-- About Page Content Block -->
+      <div class="about-section">
+        <h3>About This Project</h3>
+        <p>Welcome to your centralized technical study space. This platform functions as a lightweight, lightning-fast compiler for core data engineering concepts, designed to serve as both an interview prep kit and a production architectural reference.</p>
+        
+        <p>Instead of managing disorganized text files, this workspace aggregates and formats deep-dives across the modern data pipeline ecosystem—from initial programmatic extraction down to distributed storage and processing structures.</p>
+        
+        <blockquote>
+          <strong>Navigation Pro-Tip:</strong> Use the left-hand navigation panel to select an engineering domain. You can press the backslash key (<strong>\</strong>) on your keyboard at any point to completely open or collapse the panel for an immersive, widescreen code-reading layout.
+        </blockquote>
+
+        <h3 style="margin-top:24px;">Core Knowledge Domains</h3>
+        <p>The study curriculum breaks down into 4 key system levels:</p>
+        <ul>
+          <li><strong>Foundations & Extraction:</strong> Intermediate to advanced query logic optimization in SQL/PostgreSQL, scripting protocols with core Python libraries, and reproducible container environments with Docker.</li>
+          <li><strong>Pipeline Design & Orchestration:</strong> Idempotent ETL/ELT construction framework design alongside automated, programmatic dependency scheduling via Apache Airflow.</li>
+          <li><strong>Distributed Engines & Warehousing:</strong> High-throughput big data processing using PySpark/Spark execution DAG architectures, integrated alongside scalable analytical warehousing layers across AWS Core Services, Snowflake, and Amazon Redshift.</li>
+          <li><strong>Modern Infrastructure & Modeling:</strong> Scalable dimensional schemas using dbt transformations, continuous integration via infrastructure-as-code deployments (Terraform), and decoupled data lakehouse patterns (Apache Iceberg & Delta Lake).</li>
+        </ul>
+      </div>
     </div>
   `;
 }

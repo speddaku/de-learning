@@ -4,17 +4,17 @@
 
 ## Why Data Quality Is Not Optional
 
-Before diving into the mechanics, it's worth internalizing why this matters enough to deserve its own discipline. Bad data doesn't announce itself — it silently flows through pipelines, gets aggregated into dashboards, and informs business decisions. By the time someone notices the revenue numbers look wrong, the bad data has already been used to make budget decisions, staffed up teams, or cut product lines. The cost of fixing data quality problems compounds the longer they go undetected, which is why catching them at the pipeline layer — before data reaches consumers — is always cheaper than discovering them downstream.
+Before diving into the mechanics, it's worth internalizing why this matters enough to deserve its own discipline. Bad data doesn't announce itself — it silently flows through pipelines, gets aggregated into reports, and then surfaces weeks later as a wrong decision. The cost isn't just in data engineering time; it's in eroded trust and misdirected business decisions.
 
-> **🌍 Real world:** Industry estimates suggest that bad data costs US businesses over $3 trillion per year. For a DE team, a single silent data quality failure can undermine months of trust built with business stakeholders. Once analysts learn to distrust your pipelines, they start building their own — which creates even more inconsistency.
+> **🌍 Real world:** Industry estimates suggest that bad data costs US businesses over $3 trillion per year. For a DE team, a single silent data quality failure can undermine months of trust built with business users. It's why data quality sits at the intersection of engineering rigor and business accountability.
 
-> **💡 Interview tip:** A common interview question is "what's your approach to data quality?" A strong answer covers the full stack: upstream contracts with producers, automated checks in the pipeline (GE or dbt tests), observability (structured logs + metrics), and alerting. Saying "I add some SQL checks" signals junior thinking; talking about the entire system signals senior thinking.
+> **💡 Interview tip:** A common interview question is "what's your approach to data quality?" A strong answer covers the full stack: upstream contracts with producers, automated checks in the pipeline, and monitoring in production. Not just reactive alerting, but proactive prevention.
 
 ---
 
 ## 1. Data Quality Dimensions
 
-These six dimensions are the vocabulary used to describe data quality problems precisely. Knowing the distinction between completeness and accuracy (a common interview gotcha) is important: a dataset can be complete (all rows exist) but inaccurate (the values are wrong), or accurate for the rows it has but incomplete (many rows are missing entirely).
+These six dimensions are the vocabulary used to describe data quality problems precisely. Knowing the distinction between completeness and accuracy (a common interview gotcha) is important: a dataset can be complete (all rows present) but inaccurate (containing wrong values).
 
 ```
 Completeness:  Are all expected records present? Are required fields populated?
@@ -36,17 +36,17 @@ Validity:      Do values conform to expected formats/domains?
                → Email format, phone number format, enum values (status in ['active', 'inactive'])
 ```
 
-> **💡 Interview tip:** "What's the difference between completeness and accuracy?" Completeness is about whether data is *there* — are all expected rows present, are required columns populated? Accuracy is about whether the data *reflects reality* — is the age value 25 or is it -5? A table can score perfectly on completeness (no nulls, all rows present) while being completely inaccurate (all ages are 999 because of a bad default value).
+> **💡 Interview tip:** "What's the difference between completeness and accuracy?" Completeness is about whether data is *there* — are all expected rows present, are required columns populated? Accuracy is about whether the data is *correct* — do values reflect reality? A table could have 1 million complete records, but if 40% are wrong, it's inaccurate.
 
 ---
 
 ## 2. Data Quality Checks in SQL
 
-SQL checks are the lowest-common-denominator approach to data quality — no framework dependencies, runs anywhere you have a query engine. These are often the first checks DE teams add because they're simple to write and easy for non-engineers to read and verify.
+SQL checks are the lowest-common-denominator approach to data quality — no framework dependencies, runs anywhere you have a query engine. These are often the first checks DE teams add because they're transparent and easy to version control alongside your pipeline code.
 
 ### Row Count Checks
 
-Row count is the most fundamental check. A sudden 80% drop in rows usually means a pipeline broke upstream. A 300% spike might mean data is being double-loaded. Comparing today's count to yesterday's detects both anomalies and gradual drift.
+Row count is the most fundamental check. A sudden 80% drop in rows usually means a pipeline broke upstream. A 300% spike might mean data is being double-loaded. Comparing today's count to yesterday's can catch subtle distribution changes that look fine individually but signal an issue.
 
 ```sql
 -- Minimum row count
@@ -66,7 +66,7 @@ FROM
 
 ### Null Checks
 
-Required fields with nulls are a silent killer — downstream code that assumes a column is always populated will either crash or silently produce wrong aggregations. Tracking null *rate* per column (not just binary null/not-null) lets you catch gradual degradation before it becomes a crisis.
+Required fields with nulls are a silent killer — downstream code that assumes a column is always populated will either crash or silently produce wrong aggregations. Tracking null *rate* per column (not just count) gives you a signal for drift detection: if email nulls go from 0.1% to 5%, something broke upstream.
 
 ```sql
 -- Required fields must not be null
@@ -84,7 +84,7 @@ FROM customers;
 
 ### Range and Value Checks
 
-Business rules encoded as SQL constraints catch the kind of data that passes format validation but violates reality. A negative price, an age of 999, or an order date in the future are all technically valid data types but obviously wrong values.
+Business rules encoded as SQL constraints catch the kind of data that passes format validation but violates reality. A negative price, an age of 999, or an order date in the future are all technically valid database values but semantically nonsense. These checks force semantic validity.
 
 ```sql
 -- Price must be positive
@@ -105,7 +105,7 @@ SELECT COUNT(*) FROM events WHERE event_ts > NOW() + INTERVAL '1 hour';
 
 ### Referential Integrity
 
-Referential integrity checks catch the case where a foreign key references a primary key that doesn't exist — orders pointing to customers who aren't in the customers table, line items pointing to deleted orders. These are especially common when multiple source systems are synced independently and the sync processes run at different times.
+Referential integrity checks catch the case where a foreign key references a primary key that doesn't exist — orders pointing to customers who aren't in the customers table, line items pointing to orders that got deleted. These are the ETL equivalent of foreign key constraints, but implemented as post-load validation.
 
 ```sql
 -- Orders without matching customer
@@ -124,7 +124,7 @@ WHERE o.id IS NULL;
 
 ### Uniqueness Checks
 
-Duplicate records are one of the most common data quality problems in ETL pipelines — they typically sneak in through at-least-once delivery semantics (Kafka, SQS) or re-runs of idempotent-but-not-exactly-once pipelines.
+Duplicate records are one of the most common data quality problems in ETL pipelines — they typically sneak in through at-least-once delivery semantics (Kafka, SQS) or re-runs of idempotent-but-not-truly-idempotent pipelines. Business keys are often a better uniqueness constraint than just primary keys: the same customer shouldn't appear twice in a daily load, even if they get different internal IDs.
 
 ```sql
 -- No duplicate PKs
@@ -143,7 +143,7 @@ HAVING COUNT(*) > 1;
 
 ### Freshness Check
 
-A pipeline that ran successfully 3 days ago but hasn't run since is just as bad as a failed pipeline — your data is stale. Freshness checks answer the question: "Is the most recent data recent enough to be useful?"
+A pipeline that ran successfully 3 days ago but hasn't run since is just as bad as a failed pipeline — your data is stale. Freshness checks answer the question: "Is the most recent data recent *enough*?" for the use case.
 
 ```sql
 -- Data must be loaded within last 2 hours
@@ -164,13 +164,13 @@ FROM pg_stat_user_tables
 WHERE tablename = 'events';
 ```
 
-> **🌍 Real world:** Freshness SLAs vary by use case. A real-time dashboard might need data < 5 minutes old; a daily finance report just needs it available by 8am. Define freshness thresholds per dataset and tie them to business requirements, not engineering convenience.
+> **🌍 Real world:** Freshness SLAs vary by use case. A real-time dashboard might need data < 5 minutes old; a daily finance report just needs it available by 8am. Define freshness thresholds per use case, and monitor your compliance with them.
 
 ---
 
 ## 3. Great Expectations
 
-Writing custom SQL checks works, but it doesn't scale — each check is ad hoc, hard to document, and doesn't generate any human-readable report of what passed and what failed. Great Expectations takes a declarative approach: you define *expectations* about your data (like a spec), and GE validates actual data against those expectations, then generates documentation showing results. The philosophy is similar to unit testing: write the contract first, validate reality against it.
+Writing custom SQL checks works, but it doesn't scale — each check is ad hoc, hard to document, and doesn't generate any human-readable report of what passed and what failed. Great Expectations (GE) is a Python framework that scales data quality through reusable, documented, version-controlled expectations. It's the industry standard for teams that want data quality rigor without writing 500 SQL queries.
 
 ### Core Concepts
 ```
@@ -184,7 +184,7 @@ Checkpoint:     combines datasource + suite + action for validation workflow
 
 ### Basic Setup and Expectations
 
-The GE validator API reads like natural language — `expect_column_values_to_be_between` is self-documenting in a way that a raw SQL range check isn't. This matters when you need non-engineers (analysts, product managers) to review and sign off on data quality rules.
+The GE validator API reads like natural language — `expect_column_values_to_be_between` is self-documenting in a way that a raw SQL range check isn't. This matters when you need non-engineers (analysts, product managers) to understand and potentially write their own checks.
 
 ```python
 import great_expectations as gx
@@ -221,7 +221,7 @@ print(results.success)  # True/False
 
 ### Running with Checkpoint
 
-Checkpoints are what make GE production-ready — they tie together the data source, the expectation suite, and the *actions* to take on validation results (update docs, send Slack notification, fail the pipeline). A checkpoint is the unit you schedule in your CI/CD or Airflow pipeline.
+Checkpoints are what make GE production-ready — they tie together the data source, the expectation suite, and the *actions* to take on validation results (update docs, send Slack notification, fail the pipeline). A checkpoint is essentially a repeatable validation workflow.
 
 ```python
 # Checkpoints run validations and trigger actions (slack alert, data docs update)
@@ -254,17 +254,17 @@ checkpoint = context.add_checkpoint(
 result = checkpoint.run()
 ```
 
-> **💡 Interview tip:** GE vs custom SQL checks — when does GE win? GE wins when you need: (1) self-documenting checks that non-engineers can read and approve, (2) standardized validation across many datasets, (3) auto-generated Data Docs that act as a data quality catalog. Custom SQL wins when GE's setup overhead isn't justified for a one-off check. In practice, many teams use dbt tests for model-level checks and GE for source data validation.
+> **💡 Interview tip:** GE vs custom SQL checks — when does GE win? GE wins when you need: (1) self-documenting checks that non-engineers can read and approve, (2) standardized validation across multiple data sources (Spark, Pandas, SQL), (3) built-in data documentation, or (4) validation history tracking. Custom SQL wins for simple checks and teams that don't want framework overhead.
 
 ---
 
 ## 4. dbt Tests
 
-dbt tests are the most natural place to enforce data quality for transformed data because they live right next to the models they test and run automatically in CI. The key insight is that a failing dbt test should block a PR merge — this is how you prevent bad data from reaching production.
+dbt tests are the most natural place to enforce data quality for transformed data because they live right next to the models they test and run automatically in CI. The key insight is that a failing test fails the entire dbt run, making data quality a hard requirement, not a soft guardrail.
 
 ### Built-in Schema Tests
 
-Schema tests in YAML are declarative and readable. The four built-in tests (`not_null`, `unique`, `accepted_values`, `relationships`) cover the most common data quality assertions. For anything more complex, write a custom SQL test.
+Schema tests in YAML are declarative and readable. The four built-in tests (`not_null`, `unique`, `accepted_values`, `relationships`) cover the most common data quality assertions. For anything more complex, you can write custom SQL tests.
 
 ```yaml
 # models/schema.yml
@@ -306,6 +306,7 @@ models:
 
 Custom SQL tests follow a simple contract: the test *fails* if the query returns any rows. Write the query to return rows that represent violations of your business rule.
 
+{% raw %}
 ```sql
 -- tests/assert_positive_amounts.sql
 -- Test fails if it returns ANY rows
@@ -313,6 +314,7 @@ SELECT *
 FROM {{ ref('orders') }}
 WHERE amount < 0
 ```
+{% endraw %}
 
 ### Running dbt Tests
 
@@ -323,13 +325,13 @@ dbt test --select source:raw.*    # test source freshness
 dbt source freshness              # check source data freshness
 ```
 
-> **🌍 Real world:** In a mature DE team, dbt tests run in three places: (1) in CI on every PR to catch regressions before merge, (2) after every production dbt run to validate the output, and (3) on a schedule against source data to catch upstream feed problems. Running tests only in CI and not in production is a common gap — source data can fail expectations even when your transformation code is correct.
+> **🌍 Real world:** In a mature DE team, dbt tests run in three places: (1) in CI on every PR to catch regressions before merge, (2) after every production dbt run to validate the output, and (3) as scheduled validation jobs for data that was created before tests existed. This is defense in depth.
 
 ---
 
 ## 5. Soda Core
 
-Soda takes the YAML-declarative approach even further than GE — checks are pure YAML, requiring no Python code to define. This makes it accessible to data analysts and analytics engineers who are comfortable with YAML (from dbt, GitHub Actions, etc.) but not necessarily Python.
+Soda takes the YAML-declarative approach even further than GE — checks are pure YAML, requiring no Python code to define. This makes it accessible to data analysts and analytics engineers who aren't comfortable writing Python. It's growing as a tool because it sits at the intersection of simplicity (YAML) and power (can connect to almost any database).
 
 ```yaml
 # checks.yml — declarative YAML-based checks
@@ -355,9 +357,9 @@ soda scan -d my_postgres -c configuration.yml checks.yml
 
 ### What Is a Data Contract
 
-A data contract is a formal agreement between a data producer (the team/system generating data) and data consumers (downstream pipelines, dashboards, data scientists). Without contracts, a producer can rename a column, drop a field, or change a data type — and the first sign that something broke is when a downstream consumer's pipeline fails at 3am. Contracts make breaking changes visible and negotiated, not silent and catastrophic.
+A data contract is a formal agreement between a data producer (the team/system generating data) and data consumers (downstream pipelines, dashboards, data scientists). Without contracts, a producer can break everyone downstream with a schema change or silent data quality regression, and no one finds out until a dashboard is wrong.
 
-Think of it like a REST API contract: if you're building a service that other teams depend on, you don't just change the API response format without versioning it and notifying consumers. Data contracts apply the same discipline to data feeds.
+Think of it like a REST API contract: if you're building a service that other teams depend on, you don't just change the API response format without versioning it and notifying consumers. Data contracts are the data world's version of API versioning.
 
 ```
 Agreement between data producers and consumers defining:
@@ -373,7 +375,7 @@ Why important:
 - Enables consumers to trust the data
 ```
 
-> **💡 Interview tip:** "How do you prevent a schema change in source data from breaking your pipelines?" The full answer involves multiple layers: data contracts (agreed spec), schema registry or schema evolution policies, automated schema validation in CI (e.g., dbt `source:` definitions catch schema changes), and monitoring alerts when column distributions shift unexpectedly (data drift detection).
+> **💡 Interview tip:** "How do you prevent a schema change in source data from breaking your pipelines?" The full answer involves multiple layers: data contracts (agreed spec), schema registry (enforce it technically), data quality tests (catch violations), and monitoring (alert on violations). No single solution is enough.
 
 ### Example Data Contract
 
@@ -414,7 +416,7 @@ quality_checks:
     check: "SELECT COUNT(*) FROM orders LEFT JOIN customers ON ... WHERE customers.id IS NULL = 0"
 ```
 
-> **🌍 Real world:** Data contracts are gaining significant traction in 2024-2025. Tools like Soda, Great Expectations, and purpose-built contract frameworks (datacontract.com specification) are standardizing how contracts are defined and enforced. In interviews for senior DE roles, being able to discuss the organizational challenge of contracts — getting producer teams to agree to and maintain them — is as important as the technical implementation.
+> **🌍 Real world:** Data contracts are gaining significant traction in 2024-2025. Tools like Soda, Great Expectations, and purpose-built contract frameworks (datacontract.com specification) are becoming the new norm for teams serious about data reliability.
 
 ---
 
@@ -422,7 +424,7 @@ quality_checks:
 
 ### Structured Logging
 
-Plain text logs are written for humans to read when something goes wrong. Structured logs (JSON) are written for machines to parse, aggregate, and alert on. The difference is enormous: with plain text logs, finding all failures for a specific job name requires grep and regex. With structured JSON logs, you write a CloudWatch Insights query like `filter job_name = "daily_sales_load" | filter level = "ERROR"` and get results in seconds.
+Plain text logs are written for humans to read when something goes wrong. Structured logs (JSON) are written for machines to parse, aggregate, and alert on. The difference is enormous: with plain text logs, you can't easily query "how many jobs failed with a timeout error yesterday?" With JSON logs, that's a two-line query.
 
 ```python
 import structlog
@@ -468,7 +470,7 @@ log.error("etl_job_failed",
 )
 ```
 
-> **💡 Interview tip:** "What's the difference between logging and monitoring?" Logging is recording *events* that happened (job started, error occurred, rows processed). Monitoring is tracking *metrics* over time (job duration trending up, error rate increasing). Both are necessary: logs for root cause analysis, metrics for alerting and trending. Structured logging is the bridge — structured logs can be parsed into metrics automatically.
+> **💡 Interview tip:** "What's the difference between logging and monitoring?" Logging is recording *events* that happened (job started, error occurred, rows processed). Monitoring is tracking *metrics* over time (job success rate, p95 duration). Alerts are rules on top of metrics ("alert if success rate < 95%").
 
 ### Key Pipeline Metrics
 
@@ -493,11 +495,11 @@ Infrastructure metrics:
 - Queue depth (Kafka lag, SQS depth)
 ```
 
-> **🌍 Real world:** Row count ratio (input vs output) is a powerful signal that's cheap to compute. If your ETL normally outputs 95-100% of input rows (with a few filtered), and suddenly outputs 40%, something went wrong — a filter condition change, a bad join, a schema mismatch. This single metric would catch a huge proportion of silent data quality failures.
+> **🌍 Real world:** Row count ratio (input vs output) is a powerful signal that's cheap to compute. If your ETL normally outputs 95-100% of input rows (with a few filtered), and suddenly outputs only 20%, something broke. Set up a simple alert rule for this ratio.
 
 ### CloudWatch for ETL Monitoring
 
-Custom CloudWatch metrics let you treat your ETL pipelines like services with SLAs. Once metrics are emitted, you can build dashboards, set alarms, and use CloudWatch Insights to query log data — all within the AWS ecosystem your infrastructure already lives in.
+Custom CloudWatch metrics let you treat your ETL pipelines like services with SLAs. Once metrics are emitted, you can build dashboards, set alarms, and use CloudWatch Insights to query log data in production.
 
 ```python
 import boto3
@@ -526,7 +528,7 @@ emit_metric('JobStatus', 1, 'Count',  # 1=success, 0=failure
 
 ### CloudWatch Alarms
 
-The `TreatMissingData='breaching'` setting is critical for data pipelines. If your daily job didn't emit any metrics (because it didn't run at all), you want the alarm to fire — not silently pass. Missing data in a monitoring system is itself a signal of failure.
+The `TreatMissingData='breaching'` setting is critical for data pipelines. If your daily job didn't emit any metrics (because it didn't run at all), you want the alarm to fire — not silently pass because there's no data to compare against the threshold.
 
 ```python
 # Create alarm for job failure
@@ -550,7 +552,7 @@ cloudwatch.put_metric_alarm(
 
 ## 8. Data Lineage
 
-Data lineage answers the question: "Where did this number come from?" For compliance (GDPR, CCPA), lineage answers: "Where does PII flow?" For impact analysis, it answers: "If I rename this column, which 30 downstream dashboards will break?" Without lineage, these questions require manually tracing through code and documentation — which may be stale or nonexistent.
+Data lineage answers the question: "Where did this number come from?" For compliance (GDPR, CCPA), lineage answers: "Where does PII flow?" For impact analysis, it answers: "If I rename this column, which dashboards break?"
 
 ```
 Data lineage tracks: where data came from → how it was transformed → where it went
@@ -572,9 +574,9 @@ Why important:
 - Compliance: "where does PII flow?"
 ```
 
-> **🌍 Real world:** dbt's lineage graph (generated by `dbt docs generate`) is one of the most underappreciated features for senior DE interviews. Being able to say "we use dbt's lineage to do impact analysis before any schema changes — we can see all downstream models before touching a source" demonstrates mature data platform thinking, not just pipeline coding.
+> **🌍 Real world:** dbt's lineage graph (generated by `dbt docs generate`) is one of the most underappreciated features for senior DE interviews. Being able to say "we use dbt's lineage to do impact analysis before schema changes" instantly signals maturity.
 
-> **💡 Interview tip:** "How do you handle PII in your data pipelines?" A complete answer mentions: (1) lineage to track where PII flows, (2) classification in a data catalog, (3) masking/tokenization in the staging layer, (4) access controls at the warehouse level, and (5) retention policies. Lineage is the foundation — you can't enforce policies on data you can't find.
+> **💡 Interview tip:** "How do you handle PII in your data pipelines?" A complete answer mentions: (1) lineage to track where PII flows, (2) classification in a data catalog, (3) masking/tokenization in non-prod, and (4) access controls. This shows you've thought about data governance beyond just data quality.
 
 ---
 
